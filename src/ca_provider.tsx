@@ -31,7 +31,7 @@ type currentStep =
 
 const provider = getCA();
 
-export const ProvideCA = ({ children }: { children?: React.ReactNode }) => {
+export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
   const { ca, ready } = useProvideCA(provider);
   const [error, setError] = useState("");
   const [currentStep, setCurrentStep] = useState<currentStep>("none");
