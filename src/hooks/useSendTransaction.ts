@@ -5,15 +5,15 @@ import {
   UseSendTransactionReturnType,
   useSendTransaction as internalUseSendTransaction,
 } from "wagmi";
-import { useCA } from "./hooks/useCA";
+import { useCA } from "./useCA";
 import { useContext } from "react";
-import { CAErrorContext } from "./context";
+import { CAErrorContext } from "../context";
 
 function useSendTransaction<
   config extends Config = ResolvedRegister["config"],
   context = unknown
 >(
-  parameters?: UseSendTransactionParameters<config, context>
+  parameters: UseSendTransactionParameters<config, context> = {}
 ): UseSendTransactionReturnType<config, context> {
   const r = internalUseSendTransaction(parameters);
   const { ca } = useCA();

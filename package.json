@@ -1,7 +1,7 @@
 {
-  "name": "@arcana/ca-react-pnp",
+  "name": "@arcana/ca-wagmi",
   "version": "0.0.1",
-  "description": "",
+  "description": "Plug n play CA library to work with wagmi",
   "main": "dist/index.js",
   "exports": {
     ".": {
@@ -9,6 +9,9 @@
       "import": "./dist/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc && npm run copyAssets",
     "copyAssets": "cp -R src/assets dist/assets",

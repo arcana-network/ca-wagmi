@@ -1,6 +1,6 @@
-import { ProvideCA } from "./ca_provider";
-import { useSendTransaction } from "./xprovider";
+import { CAProvider } from "./ca_provider";
+import { useSendTransaction } from "./hooks/useSendTransaction";
 import { useBalance } from "./hooks/useUnifiedBalance";
 import { CAUnifiedBalanceContext } from "./context";
 
-export { ProvideCA, useSendTransaction, useBalance, CAUnifiedBalanceContext };
+export { CAProvider, useSendTransaction, useBalance, CAUnifiedBalanceContext };
