@@ -1,0 +1,64 @@
+import React from "react";
+import styled from "styled-components";
+import Error from "../assets/videos/Error.webm";
+
+const Title = styled.h2`
+  font-family: "Nohami", sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+  color: ${({ theme }) => theme.primaryColor};
+  text-align: center;
+`;
+
+const Button = styled.button`
+  margin-top: 20px;
+  padding: 15px 20px;
+  width: 100%;
+  background: ${({ theme }) => theme.primaryColor};
+  color: ${({ theme }) => theme.buttonTextColor};
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.3s ease;
+`;
+
+const Description = styled.p`
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0 0 10px;
+  color: ${({ theme }) => theme.primaryTitleColor};
+  text-align: center;
+`;
+
+const Video = styled.video`
+  height: 8rem;
+  position: relative;
+  animation: fadeIn 0.5s;
+`;
+
+const ErrorBox: React.FC<{
+  message: string;
+  close: () => void;
+}> = ({ message, close }) => {
+  return (
+    <>
+      <Video
+        src={Error}
+        autoPlay
+        muted
+        onContextMenu={(e) => e.preventDefault()}
+      />
+
+      <Title>Oops!</Title>
+      <Description>{message}</Description>
+      <Button onClick={close}>Close</Button>
+    </>
+  );
+};
+
+export default ErrorBox;

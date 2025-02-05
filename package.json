@@ -1,0 +1,35 @@
+{
+  "name": "@arcana/ca-react-pnp",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rimraf dist && tsc && npm run copyAssets",
+    "copyAssets": "cp -R src/assets dist/assets",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "makylfang",
+  "license": "MIT",
+  "dependencies": {
+    "@arcana/ca-sdk": "^0.0.4-beta.4",
+    "@ark-ui/react": "^4.9.1",
+    "axios": "^1.7.9",
+    "decimal.js": "^10.5.0",
+    "styled-components": "^6.1.14"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "wagmi": "^2.13.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.8",
+    "rimraf": "^3.0.2",
+    "typescript": "~5.6.2"
+  }
+}
