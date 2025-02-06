@@ -390,7 +390,7 @@ const FeesBreakdown: React.FC<FeesBreakdownProps> = ({
                     {isMaxAllowance(allowance.amount)
                       ? "Unlimited"
                       : allowance.amount}{" "}
-                    {allowance.chainName}
+                    {intent.token.symbol}
                   </AllowanceAmount>
                 </Card>
               ))}

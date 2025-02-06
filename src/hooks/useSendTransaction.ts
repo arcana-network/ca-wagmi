@@ -40,10 +40,13 @@ function useSendTransaction<
         })
         .catch((e) => {
           setError(e.message);
-          // bubble ca error to wagmi?
-          // if (options?.onError) {
-          //   options.onError(e, variables);
-          // }
+          if (options?.onError) {
+            options.onError(
+              e,
+              r.variables as Parameters<typeof r.sendTransaction>[0],
+              r.context
+            );
+          }
         });
       return;
     } else {
