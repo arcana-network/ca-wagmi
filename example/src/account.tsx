@@ -10,14 +10,14 @@ import {
   useSendTransaction,
   useUnifiedBalance,
 } from "@arcana/ca-wagmi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Decimal from "decimal.js";
 import { encodeFunctionData, erc20Abi } from "viem";
 
 export function Account() {
   const { sendTransaction } = useSendTransaction();
   const [allLoading, setLoading] = useState(false);
-  const { address, connector } = useAccount();
+  const { address } = useAccount();
   const { disconnect } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
   const { showBalance } = useBalance();
@@ -27,12 +27,12 @@ export function Account() {
   }
   const { switchChain } = useSwitchChain();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const form = e.target;
+      const form = e.currentTarget;
       const formData = new FormData(form);
 
       const toFV = formData.get("to");
