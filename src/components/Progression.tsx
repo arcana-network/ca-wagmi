@@ -155,6 +155,7 @@ interface IntentComponentProps {
 const stepList = [
   "INTENT_SUBMITTED",
   "INTENT_COLLECTION_COMPLETE",
+  "INTENT_DEPOSITS_CONFIRMED",
   "INTENT_FULFILLED",
 ];
 
@@ -278,6 +279,7 @@ const Progress: React.FC<IntentComponentProps> = ({
                   disabled={
                     index !== 0 && !step.done && !intentSteps[index - 1]?.done
                   }
+                  key={index}
                 >
                   <StyledCheckbox>
                     <StyledCheckboxLabel
