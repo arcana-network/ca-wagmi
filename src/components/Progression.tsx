@@ -55,6 +55,7 @@ const Button = styled.button`
 `;
 
 const Video = styled.video`
+  margin: 0 auto;
   height: 8rem;
   position: relative;
   animation: fadeIn 0.5s;

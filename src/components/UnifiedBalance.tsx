@@ -12,9 +12,10 @@ import { useTheme } from "./ThemeProvider";
 import type { UserAsset } from "@arcana/ca-sdk";
 import { useUnifiedBalance } from "../hooks/useUnifiedBalance";
 
-const Container = styled.div`
+const Container = styled.div<{ $display: boolean }>`
   margin: 0 auto;
   padding: 20px;
+  display: ${({ $display }) => ($display ? "block" : "none")};
 `;
 
 const Header = styled.div`
@@ -329,13 +330,18 @@ const ChainLogo = styled.img`
   border: 1px solid #ffffff;
 `;
 
-interface AllowanceComponentProps {
+interface UnifiedBalanceComponentProps {
   close: () => void;
+  $display: boolean;
 }
 
-const UnifiedBalance: React.FC<AllowanceComponentProps> = ({ close }) => {
+const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
+  close,
+  $display,
+}) => {
   const { isDarkMode } = useTheme();
   const { balances } = useUnifiedBalance();
+  console.log("unifiedBalanceComponent", balances);
 
   const getBreakdownImageArray = (breakdown: UserAsset["breakdown"]) => {
     const length = breakdown.length;
@@ -356,7 +362,7 @@ const UnifiedBalance: React.FC<AllowanceComponentProps> = ({ close }) => {
   }, [balances]);
 
   return (
-    <Container>
+    <Container $display={$display}>
       <Header>
         <Title>Unified Balance</Title>
         <CloseIcon onClick={close}>

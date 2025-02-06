@@ -184,9 +184,11 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
                       close={() => setCurrentStep("loading")}
                     />
                   )}
-                  {currentStep === "ub" && (
-                    <UnifiedBalance close={() => setCurrentStep("none")} />
-                  )}
+                  <UnifiedBalance
+                    $display={currentStep === "ub"}
+                    close={() => setCurrentStep("none")}
+                  />
+
                   {currentStep === "loading" && <EmptyLoader />}
                   {currentStep === "error" && (
                     <ErrorBox
