@@ -338,7 +338,7 @@ const FeesBreakdown: React.FC<FeesBreakdownProps> = ({
             src={intent.destination.chainLogo}
             alt="Chain Logo"
           />
-          <Chain>Arbitrum</Chain>
+          <Chain>{intent.destination.chainName}</Chain>
         </ChainDetails>
       </Content>
       <Accordion.Root multiple collapsible>
@@ -359,7 +359,7 @@ const FeesBreakdown: React.FC<FeesBreakdownProps> = ({
                 <TotalAtDestination>
                   ~
                   {(
-                    Number(intent?.fees?.total) /
+                    Number(intent?.sourcesTotal) /
                     Number(rates[intent?.token?.symbol])
                   ).toFixed(2)}{" "}
                   USD

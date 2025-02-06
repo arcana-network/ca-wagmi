@@ -46,11 +46,7 @@ export function Account() {
       const to = toFV as `0x${string}`;
       const chain = Number(chainFV);
       const asset = assetFV as "usdc" | "usdt";
-      const chainData = chainToCurrency[chain];
-      const s = chainData[asset === "usdc" ? 0 : 1];
-      if (!s) {
-        throw new Error("asset not supported");
-      }
+
       switchChain(
         { chainId: chain },
         {
@@ -63,6 +59,11 @@ export function Account() {
               amount = amount.mul(new Decimal(10).pow(18));
               value = BigInt(amount.toString());
             } else {
+              const chainData = chainToCurrency[chain];
+              const s = chainData[asset === "usdc" ? 0 : 1];
+              if (!s) {
+                throw new Error("asset not supported");
+              }
               native = false;
               amount = amount.mul(new Decimal(10).pow(6));
               data = encodeFunctionData({
