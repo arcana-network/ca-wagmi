@@ -1,0 +1,297 @@
+import {
+  useAccount,
+  useDisconnect,
+  useEnsName,
+  useSwitchChain,
+  // useSendTransaction
+} from "wagmi";
+import {
+  useBalance,
+  useSendTransaction,
+  useUnifiedBalance,
+} from "@arcana/ca-wagmi";
+import { useEffect, useState } from "react";
+import Decimal from "decimal.js";
+import { encodeFunctionData, erc20Abi } from "viem";
+
+export function Account() {
+  const { sendTransaction } = useSendTransaction();
+  const [allLoading, setLoading] = useState(false);
+  const { address, connector } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { data: ensName } = useEnsName({ address });
+  const { showBalance } = useBalance();
+  const { loading, getAssetBalance } = useUnifiedBalance();
+  if (!loading) {
+    console.log({ assetBalance: getAssetBalance("ETH") });
+  }
+  const { switchChain } = useSwitchChain();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const toFV = formData.get("to");
+      const chainFV = formData.get("chain");
+      const assetFV = formData.get("asset");
+      const amountFV = formData.get("amount");
+      if (!toFV || !chainFV || !assetFV || !amountFV) {
+        throw new Error("missing params");
+      }
+      let data: undefined | `0x${string}` = undefined;
+      const to = toFV as `0x${string}`;
+      const chain = Number(chainFV);
+      const asset = assetFV as "usdc" | "usdt";
+      const chainData = chainToCurrency[chain];
+      const s = chainData[asset === "usdc" ? 0 : 1];
+      if (!s) {
+        throw new Error("asset not supported");
+      }
+      switchChain(
+        { chainId: chain },
+        {
+          onSuccess() {
+            let value = undefined;
+
+            let amount = new Decimal(amountFV as string);
+            let native = true;
+            if (asset.toLowerCase() === "ETH".toLowerCase()) {
+              amount = amount.mul(new Decimal(10).pow(18));
+              value = BigInt(amount.toString());
+            } else {
+              native = false;
+              amount = amount.mul(new Decimal(10).pow(6));
+              data = encodeFunctionData({
+                abi: erc20Abi,
+                functionName: "transfer",
+                args: [to, BigInt(amount.toString())],
+              });
+            }
+
+            sendTransaction(
+              {
+                to: native ? to : s,
+                data,
+                value,
+              },
+              {
+                onSuccess() {
+                  setLoading(false);
+                  console.log("success");
+                },
+                onSettled() {
+                  console.log("settled");
+                },
+                onError(error) {
+                  console.log({ error });
+                  setLoading(false);
+                },
+              }
+            );
+          },
+          onError(e) {
+            console.log("error while switching chain", e);
+          },
+        }
+      );
+    } catch (e) {
+      console.log({ e });
+      setLoading(false);
+    }
+  };
+  return (
+    <>
+      {loading ? (
+        <div role="status" className="flex items-center justify-center">
+          <svg
+            aria-hidden="true"
+            className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+          <span className="sr-only">Loading...</span>
+        </div>
+      ) : (
+        <>
+          <p className="text-center p-4 mb-4 font-bold leading-none tracking-tight text-gray-900 border-2 border-gray-200 rounded-lg dark:text-white">
+            {address && ensName ? `${ensName} (${address})` : address}
+          </p>
+          <div className="mb-4 m-auto flex justify-center">
+            <button
+              className="cursor-pointer text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+              onClick={() => disconnect()}
+            >
+              Disconnect
+            </button>
+            <button
+              className="cursor-pointer text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+              onClick={() => showBalance()}
+            >
+              Show balances
+            </button>
+          </div>
+          <div className="mb-4 m-auto"></div>
+          <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+            <div className="mb-5">
+              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                To
+              </label>
+              <input
+                name="to"
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0x..."
+                required
+              />
+            </div>
+            <div className="mb-5">
+              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Destination Chain
+              </label>
+              <select
+                required
+                name="chain"
+                id="chain"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                defaultValue={""}
+              >
+                <option value="" disabled>
+                  Select a chain
+                </option>
+
+                <option value="42161">Arbitrum One</option>
+                <option value="59144">Linea</option>
+                <option value="534352">Scroll</option>
+                <option value="10">Optimism</option>
+                <option value="8453">Base</option>
+                <option value="1">Ethereum</option>
+                <option value="137">Polygon POS</option>
+              </select>
+            </div>
+            <div className="mb-5">
+              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Asset
+              </label>
+              <select
+                name="asset"
+                id="asset"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                defaultValue={""}
+              >
+                <option value="" disabled>
+                  Select an asset
+                </option>
+                <option value="usdt">USDT</option>
+                <option value="usdc">USDC</option>
+                <option value="eth">ETH</option>
+              </select>
+            </div>
+            <div className="mb-5">
+              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Amount
+              </label>
+              <input
+                name="amount"
+                type="text"
+                id="amount"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+              />
+            </div>
+            {/* <button
+      type="submit"
+      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      Submit
+    </button> */}
+            <button
+              type="submit"
+              disabled={allLoading}
+              className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              {allLoading && (
+                <svg
+                  aria-hidden="true"
+                  role="status"
+                  className="inline w-4 h-4 me-3 text-white animate-spin"
+                  viewBox="0 0 100 101"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                    fill="#E5E7EB"
+                  />
+                  <path
+                    d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              )}
+              Submit
+              <svg
+                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                />
+              </svg>
+            </button>
+          </form>
+        </>
+      )}
+    </>
+  );
+}
+
+const chainToCurrency: {
+  [k: number]: [`0x${string}` | null, `0x${string}` | null];
+} = {
+  10: [
+    "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+    "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58",
+  ],
+  137: [
+    "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359",
+    "0xc2132d05d31c914a87c6611c10748aeb04b58e8f",
+  ],
+  42161: [
+    "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+    "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+  ],
+  1: [
+    "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "0xdac17f958d2ee523a2206206994597c13d831ec7",
+  ],
+  8453: ["0x833589fcd6edb6e08f4c7c32d4f71b54bda02913", null],
+  534352: [
+    "0x06efdbff2a14a7c8e15944d1f4a48f9f95f663a4",
+    "0xf55bec9cafdbe8730f096aa55dad6d22d44099df",
+  ],
+  59144: [
+    "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
+    "0xa219439258ca9da29e9cc4ce5596924745e12b93",
+  ],
+};
