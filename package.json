@@ -1,6 +1,6 @@
 {
   "name": "@arcana/ca-wagmi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Plug n play CA library to work with wagmi",
   "main": "dist/index.js",
   "exports": {
@@ -15,7 +15,8 @@
   "scripts": {
     "build": "rimraf dist && tsc && npm run copyAssets",
     "copyAssets": "cp -R src/assets dist/assets",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
   },
   "author": "makylfang",
   "license": "MIT",

@@ -2,17 +2,34 @@ import { UserAsset } from "@arcana/ca-sdk";
 import { useState, useContext, useEffect } from "react";
 import { clearAsyncInterval, setAsyncInterval } from "../utils/commonFunction";
 import { CAUnifiedBalanceContext, CAContext } from "../context";
+import Decimal from "decimal.js";
 
 const useUnifiedBalance = () => {
   const { ca, ready } = useContext(CAContext);
+  const [loading, setLoading] = useState(true);
   const [balances, setBalances] = useState<UserAsset[]>([]);
+  const [balance, setBalance] = useState(BigInt(0));
 
   const refreshBalances = () => {
     if (ready && ca) {
-      ca.getUnifiedBalances()
+      return ca
+        .getUnifiedBalances()
         .then((val) => {
           console.log({ val });
           setBalances(val);
+          setLoading(false);
+          const ethBalance = balances.find(
+            (b) => b.symbol.toLowerCase() === "eth"
+          );
+          if (ethBalance) {
+            setBalance(
+              BigInt(
+                new Decimal(ethBalance.balance)
+                  .mul(Decimal.pow(10, 18))
+                  .toString()
+              )
+            );
+          }
         })
         .catch((e) => {
           console.error("error getting unified balances", e);
@@ -20,15 +37,20 @@ const useUnifiedBalance = () => {
     }
   };
 
+  const getAssetBalance = (asset: string) => {
+    if (balances.length) {
+      return balances.find(
+        (b) => b.symbol.toLowerCase() === asset.toLowerCase()
+      );
+    }
+    return undefined;
+  };
+
   useEffect(() => {
     refreshBalances();
     const idx = setAsyncInterval(async () => {
       try {
-        if (ready && ca) {
-          const b = await ca.getUnifiedBalances();
-          console.log({ val: b });
-          setBalances(b);
-        }
+        await refreshBalances();
       } catch (e) {}
     }, 20000);
 
@@ -38,7 +60,10 @@ const useUnifiedBalance = () => {
   }, [ready, ca]);
 
   return {
+    balance,
     balances,
+    loading,
+    getAssetBalance,
   };
 };
 
