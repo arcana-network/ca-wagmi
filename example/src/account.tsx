@@ -45,8 +45,8 @@ export function Account() {
       let data: undefined | `0x${string}` = undefined;
       const to = toFV as `0x${string}`;
       const chain = Number(chainFV);
-      const asset = assetFV as "usdc" | "usdt";
-
+      const asset = assetFV as "usdc" | "usdt" | "eth";
+      let s: null | `0x${string}` = null;
       switchChain(
         { chainId: chain },
         {
@@ -60,7 +60,7 @@ export function Account() {
               value = BigInt(amount.toString());
             } else {
               const chainData = chainToCurrency[chain];
-              const s = chainData[asset === "usdc" ? 0 : 1];
+              s = chainData[asset === "usdc" ? 0 : 1];
               if (!s) {
                 throw new Error("asset not supported");
               }
