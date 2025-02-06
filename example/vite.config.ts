@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     nodePolyfills({
-      include: ["buffer"],
+      include: ["buffer", "events"],
       globals: {
         Buffer: true,
         global: true,

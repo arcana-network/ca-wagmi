@@ -4,7 +4,7 @@ import Loader from "../assets/videos/Loader_Light.webm";
 import DarkLoader from "../assets/videos/Loader_Dark.webm";
 import ProcessLoader from "../assets/videos/Circle_Loader.webm";
 import ProcessLoaderDark from "../assets/videos/Circle_Loader_Dark.webm";
-import Success from "../assets/videos/Success.webm";
+import Success from "../assets/videos/success.webm";
 import Error from "../assets/videos/Error.webm";
 import SuccessCheck from "../assets/images/SuccessCheck.svg";
 import ErrorCheck from "../assets/images/ErrorExclamation.svg";
