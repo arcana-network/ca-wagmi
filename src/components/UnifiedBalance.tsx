@@ -181,6 +181,7 @@ const ItemIndicator = styled(Accordion.ItemIndicator)`
   width: 15px;
   margin-top: 2px;
   cursor: pointer;
+  display: flex;
 `;
 
 const ItemContent = styled(Accordion.ItemContent)`
@@ -309,7 +310,8 @@ const ChainAbstractedContainer = styled.div<{ $isdarkmode: boolean }>`
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.25rem;
+  padding: 0.25rem 0.45rem;
+
   border-radius: 9999px;
   background: ${({ $isdarkmode, theme }) =>
     $isdarkmode ? darkTheme.chainAbsDetailsColor : theme.backgroundColor};
@@ -334,6 +336,11 @@ interface UnifiedBalanceComponentProps {
   close: () => void;
   $display: boolean;
 }
+
+const message = `These are CA or Chain Abstracted balances.
+The Arcana Chain Abstraction protocol unifies the
+asset's balances across the different chains.
+`;
 
 const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
   close,
@@ -411,17 +418,17 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
                         </TokenSymbolTitle>
 
                         {asset.abstracted && (
-                          <ChainAbstractedContainer $isdarkmode={isDarkMode}>
-                            Chain Abstracted
-                            <AppTooltip message="Chain Abstracted">
+                          <AppTooltip message={message}>
+                            <ChainAbstractedContainer $isdarkmode={isDarkMode}>
+                              CA
                               <InfoImg
                                 src={InfoIcon}
                                 alt="Info"
                                 height={10}
                                 width={10}
                               />
-                            </AppTooltip>
-                          </ChainAbstractedContainer>
+                            </ChainAbstractedContainer>
+                          </AppTooltip>
                         )}
                       </TokenWrap>
 
