@@ -1,6 +1,6 @@
 {
   "name": "@arcana/ca-wagmi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Plug n play CA library to work with wagmi",
   "main": "dist/index.js",
   "exports": {
