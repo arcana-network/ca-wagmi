@@ -22,6 +22,7 @@ const TooltipContent = styled(Tooltip.Content)`
   padding: 8px 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 999;
+  max-width: 250px;
 `;
 
 const TooltipArrow = styled(Tooltip.Arrow)`
