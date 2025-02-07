@@ -20,14 +20,23 @@ const toaster = createToaster({
   placement: "top-end",
   overlap: false,
   gap: 24,
-  duration: 5000,
+  duration: 10000,
 });
 
-const createSuccessToast = () => {
+const createSuccessToast = (chain: number, hash: `0x${string}`) => {
   toaster.create({
     title: "Success",
     description: "Transaction submitted!",
     type: "info",
+    action: {
+      label: "Show in explorer",
+      onClick: () => {
+        const base = idToExplorer[chain];
+        if (base) {
+          window.open(new URL(`/tx/${hash}`, base), "_blank");
+        }
+      },
+    },
   });
 };
 
@@ -76,8 +85,8 @@ export function Account() {
             value,
           },
           {
-            onSuccess() {
-              createSuccessToast();
+            onSuccess(hash) {
+              createSuccessToast(chain, hash);
               form.reset();
               setLoading(false);
               console.log("success");
@@ -107,8 +116,8 @@ export function Account() {
             args: [to, BigInt(amount.mul(new Decimal(10).pow(6)).toString())],
           },
           {
-            onSuccess() {
-              createSuccessToast();
+            onSuccess(hash) {
+              createSuccessToast(chain, hash);
               form.reset();
               setLoading(false);
               console.log("success");
@@ -131,8 +140,8 @@ export function Account() {
     <>
       <Toaster toaster={toaster} className="w-full">
         {(toast) => (
-          <Toast.Root className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800">
-            <Toast.Description className="basis-5/6 flex items-center">
+          <Toast.Root className="flex items-center w-full max-w-md p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800">
+            <Toast.Description className="basis-3/6 flex items-center">
               <div className="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
                 <svg
                   className="w-5 h-5"
@@ -149,6 +158,11 @@ export function Account() {
                 {toast.description}
               </div>
             </Toast.Description>
+            {toast.action && (
+              <Toast.ActionTrigger className="cursor-pointer basis-2/6 text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700">
+                {toast.action?.label}
+              </Toast.ActionTrigger>
+            )}
             <Toast.CloseTrigger className="basis-1/6">
               <button
                 type="button"
@@ -361,4 +375,14 @@ const chainToCurrency: {
     "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     "0xa219439258ca9da29e9cc4ce5596924745e12b93",
   ],
+};
+
+const idToExplorer: { [k: number]: string } = {
+  1: "https://etherscan.io/",
+  10: "https://optimistic.etherscan.io/",
+  137: "https://polygonscan.com/",
+  42161: "https://arbiscan.io/",
+  8453: "https://basescan.org/",
+  534352: "https://scrollscan.com/",
+  59144: "https://lineascan.build/",
 };
