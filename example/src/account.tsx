@@ -8,11 +8,12 @@ import {
 import {
   useBalance,
   useSendTransaction,
+  useWriteContract,
   useUnifiedBalance,
 } from "@arcana/ca-wagmi";
 import { useState } from "react";
 import Decimal from "decimal.js";
-import { encodeFunctionData, erc20Abi } from "viem";
+import { erc20Abi } from "viem";
 
 export function Account() {
   const { sendTransaction } = useSendTransaction();
@@ -25,9 +26,10 @@ export function Account() {
   if (!loading) {
     console.log({ assetBalance: getAssetBalance("ETH") });
   }
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
+  const { writeContract } = useWriteContract();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -42,63 +44,63 @@ export function Account() {
       if (!toFV || !chainFV || !assetFV || !amountFV) {
         throw new Error("missing params");
       }
-      let data: undefined | `0x${string}` = undefined;
       const to = toFV as `0x${string}`;
       const chain = Number(chainFV);
       const asset = assetFV as "usdc" | "usdt" | "eth";
       let s: null | `0x${string}` = null;
-      switchChain(
-        { chainId: chain },
-        {
-          onSuccess() {
-            let value = undefined;
+      await switchChainAsync({ chainId: chain });
 
-            let amount = new Decimal(amountFV as string);
-            let native = true;
-            if (asset.toLowerCase() === "ETH".toLowerCase()) {
-              amount = amount.mul(new Decimal(10).pow(18));
-              value = BigInt(amount.toString());
-            } else {
-              const chainData = chainToCurrency[chain];
-              s = chainData[asset === "usdc" ? 0 : 1];
-              if (!s) {
-                throw new Error("asset not supported");
-              }
-              native = false;
-              amount = amount.mul(new Decimal(10).pow(6));
-              data = encodeFunctionData({
-                abi: erc20Abi,
-                functionName: "transfer",
-                args: [to, BigInt(amount.toString())],
-              });
-            }
+      let value = undefined;
 
-            sendTransaction(
-              {
-                to: native ? to : s,
-                data,
-                value,
-              },
-              {
-                onSuccess() {
-                  setLoading(false);
-                  console.log("success");
-                },
-                onSettled() {
-                  console.log("settled");
-                },
-                onError(error) {
-                  console.log({ error });
-                  setLoading(false);
-                },
-              }
-            );
+      let amount = new Decimal(amountFV as string);
+      if (asset.toLowerCase() === "ETH".toLowerCase()) {
+        amount = amount.mul(new Decimal(10).pow(18));
+        value = BigInt(amount.toString());
+        sendTransaction(
+          {
+            to,
+            value,
           },
-          onError(e) {
-            console.log("error while switching chain", e);
-          },
+          {
+            onSuccess() {
+              setLoading(false);
+              console.log("success");
+            },
+            onSettled() {
+              console.log("settled");
+            },
+            onError(error) {
+              console.log({ error });
+              setLoading(false);
+            },
+          }
+        );
+      } else {
+        const chainData = chainToCurrency[chain];
+        s = chainData[asset === "usdc" ? 0 : 1];
+        if (!s) {
+          throw new Error("asset not supported");
         }
-      );
+
+        writeContract(
+          {
+            address: s,
+            abi: erc20Abi,
+            functionName: "transfer",
+            args: [to, BigInt(amount.mul(new Decimal(10).pow(6)).toString())],
+          },
+          {
+            onSuccess() {
+              setLoading(false);
+              console.log("success");
+            },
+            onError(error) {
+              setLoading(false);
+              console.log({ error });
+            },
+          }
+        );
+      }
     } catch (e) {
       console.log({ e });
       setLoading(false);
