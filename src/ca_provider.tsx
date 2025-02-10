@@ -215,7 +215,7 @@ const useProvideCA = (ca: CA) => {
   useAccountEffect({
     async onConnect({ connector }) {
       const p = await connector.getProvider();
-      ca.setProvider(p as any);
+      ca.setEVMProvider(p as any);
       await ca.init();
       setReady(true);
     },

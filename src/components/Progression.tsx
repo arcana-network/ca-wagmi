@@ -272,60 +272,58 @@ const Progress: React.FC<IntentComponentProps> = ({
 
           <Container>
             {steps.map((step, index: number) => (
-              <>
-                <Checkbox.Root
-                  value={step.type}
-                  checked={step.done || false}
-                  disabled={
-                    index !== 0 && !step.done && !intentSteps[index - 1]?.done
-                  }
-                  key={index}
-                >
-                  <StyledCheckbox>
-                    <StyledCheckboxLabel
-                      disabled={
-                        inProgressState != "success" &&
-                        !step.done &&
-                        index > incompleteStep
-                      }
-                    >
-                      {getTextFromStep(step.type, step.done || false)}
-                    </StyledCheckboxLabel>
+              <Checkbox.Root
+                value={step.type}
+                checked={step.done || false}
+                disabled={
+                  index !== 0 && !step.done && !intentSteps[index - 1]?.done
+                }
+                key={index}
+              >
+                <StyledCheckbox>
+                  <StyledCheckboxLabel
+                    disabled={
+                      inProgressState != "success" &&
+                      !step.done &&
+                      index > incompleteStep
+                    }
+                  >
+                    {getTextFromStep(step.type, step.done || false)}
+                  </StyledCheckboxLabel>
 
-                    <StyledCheckboxControl checked={step.done || false}>
-                      {step.done === false ? (
-                        index == currentStep - 1 ? (
-                          <ProcessVideo
-                            src={isDarkMode ? ProcessLoaderDark : ProcessLoader}
-                            ref={videoRef}
-                            muted
-                            autoPlay
-                            playsInline
-                            preload="auto"
-                            onContextMenu={(e) => e.preventDefault()}
-                          />
-                        ) : (
-                          "-"
-                        )
-                      ) : step.done === true ? (
-                        <img
-                          src={SuccessCheck}
-                          alt="Success"
-                          width={20}
-                          height={20}
+                  <StyledCheckboxControl checked={step.done || false}>
+                    {step.done === false ? (
+                      index == currentStep - 1 ? (
+                        <ProcessVideo
+                          src={isDarkMode ? ProcessLoaderDark : ProcessLoader}
+                          ref={videoRef}
+                          muted
+                          autoPlay
+                          playsInline
+                          preload="auto"
+                          onContextMenu={(e) => e.preventDefault()}
                         />
                       ) : (
-                        <img
-                          src={ErrorCheck}
-                          alt="Error"
-                          width={20}
-                          height={20}
-                        />
-                      )}
-                    </StyledCheckboxControl>
-                  </StyledCheckbox>
-                </Checkbox.Root>
-              </>
+                        "-"
+                      )
+                    ) : step.done === true ? (
+                      <img
+                        src={SuccessCheck}
+                        alt="Success"
+                        width={20}
+                        height={20}
+                      />
+                    ) : (
+                      <img
+                        src={ErrorCheck}
+                        alt="Error"
+                        width={20}
+                        height={20}
+                      />
+                    )}
+                  </StyledCheckboxControl>
+                </StyledCheckbox>
+              </Checkbox.Root>
             ))}
             {explorerURL && (
               <LinkContainer>
