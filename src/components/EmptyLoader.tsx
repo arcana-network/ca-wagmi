@@ -8,6 +8,7 @@ const Video = styled.video`
   height: 8rem;
   position: relative;
   animation: fadeIn 0.5s;
+  margin: 0 auto;
 `;
 
 const EmptyLoader = () => {
