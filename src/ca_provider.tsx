@@ -16,7 +16,6 @@ const provider = getCA();
 
 export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
   const { ca, ready } = useProvideCA(provider);
-  const [error, setError] = React.useState("");
   const {
     steps,
     setCurrentStep,
@@ -26,6 +25,8 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
     intentRefreshing,
     intentDeny,
     intentAllow,
+    error,
+    setError,
   } = useCAInternal(ca);
 
   return (

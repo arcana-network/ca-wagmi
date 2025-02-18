@@ -20,7 +20,7 @@ type CurrentStep =
 
 const useCAInternal = (ca: CA) => {
   const [currentStep, setCurrentStep] = useState<CurrentStep>("none");
-
+  const [error, setError] = useState("");
   const [steps, setSteps] = useState<Array<ProgressStep & { done: boolean }>>(
     []
   );
@@ -60,6 +60,12 @@ const useCAInternal = (ca: CA) => {
     setCurrentStep("none");
     intentP.current.deny();
   };
+
+  useEffect(() => {
+    if (error) {
+      setCurrentStep("error");
+    }
+  }, [error]);
 
   useEffect(() => {
     if (ca) {
@@ -136,6 +142,8 @@ const useCAInternal = (ca: CA) => {
     intentAllow,
     intentDeny,
     allowanceP,
+    error,
+    setError,
   };
 };
 
