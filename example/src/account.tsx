@@ -73,12 +73,10 @@ export function Account() {
       const asset = assetFV as "usdc" | "usdt" | "eth";
       await switchChainAsync({ chainId: chain });
 
-      let value = undefined;
-
       let amount = new Decimal(amountFV as string);
       if (asset.toLowerCase() === "ETH".toLowerCase()) {
         amount = amount.mul(new Decimal(10).pow(18));
-        value = BigInt(amount.toString());
+        const value = BigInt(amount.toString());
         sendTransaction(
           {
             to,
