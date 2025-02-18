@@ -36,6 +36,25 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  useEffect(() => {
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      const theme = event.matches ? "dark" : "light";
+      localStorage.setItem("theme", theme);
+      setIsDarkMode(theme == "dark");
+    };
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", handleMediaChange);
+
+    //good house keeping to remove listener, good article here https://www.pluralsight.com/guides/how-to-cleanup-event-listeners-react
+    return () => {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", handleMediaChange);
+    };
+  }, []);
+
   return (
     <ThemeContext.Provider value={{ toggleTheme, isDarkMode }}>
       <StyledThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
