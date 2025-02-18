@@ -299,19 +299,22 @@ type ReadableIntent = {
   };
 };
 
-interface FeesBreakdownProps {
-  intent: ReadableIntent;
+interface IntentViewProps {
+  intent?: ReadableIntent;
   deny: () => void;
   allow: () => void;
   intentRefreshing: boolean;
 }
 
-const FeesBreakdown: React.FC<FeesBreakdownProps> = ({
+const IntentView: React.FC<IntentViewProps> = ({
   allow,
   deny,
   intent,
   intentRefreshing,
 }) => {
+  if (!intent) {
+    return <></>;
+  }
   const [rates, setRates] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -575,4 +578,4 @@ const FeesBreakdown: React.FC<FeesBreakdownProps> = ({
   );
 };
 
-export default FeesBreakdown;
+export default IntentView;
