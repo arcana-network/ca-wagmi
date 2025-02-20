@@ -372,7 +372,6 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
   $display,
 }) => {
   const { address } = useAccount();
-
   const { isDarkMode } = useTheme();
   const { balances } = useUnifiedBalance();
   console.log("unifiedBalanceComponent", balances);
@@ -395,6 +394,9 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
     }
   }, [balances]);
 
+  if (!address) {
+    return <></>;
+  }
   return (
     <Container $display={$display}>
       <Header>
