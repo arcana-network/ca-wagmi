@@ -5,12 +5,8 @@ import { getCoinbasePrices } from "../utils/coinbase";
 import AppTooltip from "./shared/Tooltip";
 import InfoIcon from "../assets/images/Info.svg";
 import Arrow from "../assets/images/ArraowDown.svg";
-import {
-  getChainDetails,
-  getLogo,
-  isMaxAllowance,
-} from "../utils/commonFunction";
-import { symbolToLogo } from "../utils/getLogoFromSymbol";
+import { getReadableNumber } from "../utils/commonFunction";
+import Decimal from "decimal.js";
 
 const Wrapper = styled.div`
   display: flex;
@@ -355,7 +351,11 @@ const IntentView: React.FC<IntentViewProps> = ({
             </HeaderLeft>
             <HeaderRight>
               <TotalFees>
-                {Number(intent?.sourcesTotal)?.toFixed(6) || "0"}{" "}
+                {getReadableNumber(
+                  new Decimal(intent.sourcesTotal)
+                    .sub(intent.fees.total)
+                    .toString()
+                )}{" "}
                 {intent?.token?.symbol}
               </TotalFees>
               {rates?.[intent?.token?.symbol] && (
@@ -378,22 +378,19 @@ const IntentView: React.FC<IntentViewProps> = ({
           </Header>
           <AccordionContent>
             <FeeDetails>
-              {intent.sources.map((allowance) => (
-                <Card key={allowance.chainID}>
+              {intent.sources.map((source) => (
+                <Card key={source.chainID}>
                   <FlexContainer>
                     <RelativeContainer>
                       <Logo src={intent.token.logo} alt="Token Logo" />
-                      <ChainLogo src={allowance.chainLogo} alt="Chain Logo" />
+                      <ChainLogo src={source.chainLogo} alt="Chain Logo" />
                     </RelativeContainer>
                     <TokenDetails>
-                      <TokenName>{allowance.chainName}</TokenName>
+                      <TokenName>{source.chainName}</TokenName>
                     </TokenDetails>
                   </FlexContainer>
                   <AllowanceAmount>
-                    {isMaxAllowance(allowance.amount)
-                      ? "Unlimited"
-                      : allowance.amount}{" "}
-                    {intent.token.symbol}
+                    {getReadableNumber(source.amount)} {intent.token.symbol}
                   </AllowanceAmount>
                 </Card>
               ))}
@@ -412,15 +409,14 @@ const IntentView: React.FC<IntentViewProps> = ({
             </HeaderLeft>
             <HeaderRight>
               <TotalFees>
-                {Number(intent?.fees?.total)?.toFixed(6) || "0"}{" "}
-                {intent?.token?.symbol}
+                {getReadableNumber(intent.fees.total)} {intent?.token?.symbol}
               </TotalFees>
               {rates?.[intent?.token?.symbol] && (
                 <TotalAtDestination>
                   ~
                   {(
-                    Number(intent?.fees?.total) /
-                    Number(rates[intent?.token?.symbol])
+                    Number(intent.fees.total) /
+                    Number(rates[intent.token.symbol])
                   ).toFixed(2)}{" "}
                   USD
                 </TotalAtDestination>
@@ -444,7 +440,7 @@ const IntentView: React.FC<IntentViewProps> = ({
                 </HeaderLeft>
                 <HeaderRight>
                   <Value>
-                    {Number(intent?.fees?.caGas)?.toFixed(6) || "0"}{" "}
+                    {getReadableNumber(intent.fees.caGas)}{" "}
                     {intent?.token?.symbol}
                   </Value>
                   {/* {rates?.[intent?.token?.symbol] && (
@@ -468,7 +464,7 @@ const IntentView: React.FC<IntentViewProps> = ({
                 </HeaderLeft>
                 <HeaderRight>
                   <Value>
-                    {Number(intent?.fees?.solver)?.toFixed(6) || "0"}{" "}
+                    {getReadableNumber(intent.fees.solver)}{" "}
                     {intent?.token?.symbol}
                   </Value>
                   {/* {rates?.[intent?.token?.symbol] && (
@@ -492,7 +488,7 @@ const IntentView: React.FC<IntentViewProps> = ({
                 </HeaderLeft>
                 <HeaderRight>
                   <Value>
-                    {Number(intent?.fees?.protocol)?.toFixed(6) || "0"}{" "}
+                    {getReadableNumber(intent.fees.protocol)}{" "}
                     {intent?.token?.symbol}
                   </Value>
                   {/* {rates?.[intent?.token?.symbol] && (
@@ -517,7 +513,9 @@ const IntentView: React.FC<IntentViewProps> = ({
                 <HeaderRight>
                   <Value>
                     {" "}
-                    {intent?.fees.gasSupplied + " " + intent?.token?.symbol}
+                    {getReadableNumber(intent.fees.gasSupplied) +
+                      " " +
+                      intent?.token?.symbol}
                   </Value>
                   {/* {rates?.[intent?.token?.symbol] && (
                     <USDValue>
@@ -545,8 +543,7 @@ const IntentView: React.FC<IntentViewProps> = ({
         </HeaderLeft>
         <HeaderRight>
           <TotalFeesValue>
-            {Number(intent?.sourcesTotal)?.toFixed(6) || "0"}{" "}
-            {intent?.token?.symbol}
+            {getReadableNumber(intent.sourcesTotal)} {intent?.token?.symbol}
           </TotalFeesValue>
 
           {rates?.[intent?.token?.symbol] && (

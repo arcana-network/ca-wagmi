@@ -1,9 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import Loader from "../assets/videos/Loader_Light.webm";
-import DarkLoader from "../assets/videos/Loader_Dark.webm";
-import ProcessLoader from "../assets/videos/Circle_Loader.webm";
-import ProcessLoaderDark from "../assets/videos/Circle_Loader_Dark.webm";
+import Loader from "./shared/Loader";
 import Success from "../assets/videos/success.webm";
 import Error from "../assets/videos/Error.webm";
 import SuccessCheck from "../assets/images/SuccessCheck.svg";
@@ -61,12 +58,14 @@ const Video = styled.video`
   animation: fadeIn 0.5s;
 `;
 
-const ProcessVideo = styled.video.attrs(() => ({
-  muted: true,
-  playsInline: true,
-}))`
-  height: 2rem;
-  position: relative;
+const BigLoaderWrap = styled.div`
+  width: 5rem;
+  animation: fadeIn 0.5s;
+  margin: 1rem auto;
+`;
+
+const LoaderWrap = styled.div`
+  width: 2rem;
   animation: fadeIn 0.5s;
 `;
 
@@ -261,13 +260,9 @@ const Progress: React.FC<IntentComponentProps> = ({
               onContextMenu={(e) => e.preventDefault()}
             />
           ) : (
-            <Video
-              src={isDarkMode ? DarkLoader : Loader}
-              autoPlay
-              loop
-              muted
-              onContextMenu={(e) => e.preventDefault()}
-            />
+            <BigLoaderWrap>
+              <Loader $width="13px" />
+            </BigLoaderWrap>
           )}
 
           <Container>
@@ -294,15 +289,9 @@ const Progress: React.FC<IntentComponentProps> = ({
                   <StyledCheckboxControl checked={step.done || false}>
                     {step.done === false ? (
                       index == currentStep - 1 ? (
-                        <ProcessVideo
-                          src={isDarkMode ? ProcessLoaderDark : ProcessLoader}
-                          ref={videoRef}
-                          muted
-                          autoPlay
-                          playsInline
-                          preload="auto"
-                          onContextMenu={(e) => e.preventDefault()}
-                        />
+                        <LoaderWrap>
+                          <Loader $width="4px" />
+                        </LoaderWrap>
                       ) : (
                         "-"
                       )

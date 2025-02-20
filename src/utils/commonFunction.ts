@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import { MAINNET_CHAINS } from "./constants";
 
 const getLogo = (logoName?: string): string => {
@@ -60,7 +61,21 @@ const clearAsyncInterval = (intervalIndex: number) => {
   }
 };
 
+const THRESHOLD_AMOUNT = new Decimal(1).mul(Decimal.pow(10, -6));
+
+const getReadableNumber = (input: string) => {
+  const n = new Decimal(input);
+  if (n.isZero()) {
+    return "0";
+  }
+  if (n.lessThan(THRESHOLD_AMOUNT)) {
+    return `~${THRESHOLD_AMOUNT.toString()}`;
+  }
+  return n.toDecimalPlaces(6).toString();
+};
+
 export {
+  getReadableNumber,
   setAsyncInterval,
   clearAsyncInterval,
   formatNumber,

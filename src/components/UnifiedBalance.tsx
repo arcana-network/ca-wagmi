@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Cross from "../assets/images/Close.svg";
-import { formatNumber } from "../utils/commonFunction";
+import { formatNumber, getReadableNumber } from "../utils/commonFunction";
 import { Accordion } from "@ark-ui/react";
 import AppTooltip from "./shared/Tooltip";
 import Decimal from "decimal.js";
@@ -11,6 +11,8 @@ import { darkTheme } from "../utils/theme";
 import { useTheme } from "./ThemeProvider";
 import type { UserAsset } from "@arcana/ca-sdk";
 import { useUnifiedBalance } from "../hooks/useUnifiedBalance";
+import { useAccount } from "wagmi";
+import CopySVG from "./shared/Copy";
 
 const Container = styled.div<{ $display: boolean }>`
   margin: 0 auto;
@@ -48,6 +50,18 @@ const BalanceCard = styled.div`
   padding: 2rem;
   border-radius: 8px;
   background: ${({ theme }) => theme.balanceCardBackGround};
+`;
+
+const AddressCard = styled.div`
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-family: "Inter", sans-serif;
+  line-height: 12px;
+  display: flex;
+  color: ${({ theme }) => theme.primaryColor};
+  fill: currentColor;
+  gap: 0.2rem;
+  justify-content: center;
 `;
 
 const Balance = styled.div`
@@ -192,7 +206,7 @@ const BreakdownContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.75rem;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.chainAbsBackGround};
 `;
@@ -206,7 +220,7 @@ const BreakdownItem = styled.div`
 const BreakdownToken = styled.span`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 `;
 
 const RelativeContainer = styled.div`
@@ -236,6 +250,17 @@ const Root = styled(Accordion.Root)`
   gap: 1rem;
   overflow-y: auto;
   padding: 0.35rem;
+`;
+
+const CurrencySmall = styled.span`
+  font-weight: 600;
+  font-size: 2rem;
+  font-family: "Inter", sans-serif;
+`;
+const CurrencyLarge = styled.span`
+  font-weight: 600;
+  font-size: 3rem;
+  font-family: "Inter", sans-serif;
 `;
 
 const TokenIcon = styled.img<{ length: number; index: number }>`
@@ -346,6 +371,8 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
   close,
   $display,
 }) => {
+  const { address } = useAccount();
+
   const { isDarkMode } = useTheme();
   const { balances } = useUnifiedBalance();
   console.log("unifiedBalanceComponent", balances);
@@ -378,9 +405,16 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
       </Header>
 
       <BalanceCard>
-        <Balance>${formatNumber(total)}</Balance>
+        <Balance>
+          <CurrencySmall>$</CurrencySmall>
+          <CurrencyLarge>{total.toString().split(".")[0]}.</CurrencyLarge>
+          <CurrencySmall>{total.toString().split(".")[1]}</CurrencySmall>
+        </Balance>
+        <AddressCard>
+          <span>{truncateMid(address!)}</span>
+          <CopySVG address={address!} />
+        </AddressCard>
       </BalanceCard>
-
       <BreakdownCard>
         <Root collapsible>
           {balances.length > 0 &&
@@ -450,9 +484,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
                       )} (${new Decimal(asset.balance)} ${asset.symbol})`}
                     >
                       <BalanceAmount>
-                        {new Decimal(asset.balance)
-                          .toDecimalPlaces(4)
-                          .toNumber()}{" "}
+                        {getReadableNumber(asset.balance)}{" "}
                         <TokenSymbol>{asset.symbol}</TokenSymbol>
                       </BalanceAmount>
                     </AppTooltip>
@@ -484,9 +516,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
                           )} (${new Decimal(token.balance)} ${asset.symbol})`}
                         >
                           <BalanceAmountChainAbs>
-                            {new Decimal(token.balance)
-                              .toDecimalPlaces(4)
-                              .toNumber()}{" "}
+                            {getReadableNumber(token.balance)}{" "}
                             <TokenSymbolChainAbs>
                               {asset.symbol}
                             </TokenSymbolChainAbs>
@@ -503,5 +533,12 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
     </Container>
   );
 };
+
+function truncateMid(str: string, maxChars = 6) {
+  if (str.length <= maxChars) return str;
+  const left = str.slice(0, maxChars);
+  const right = str.slice(-maxChars);
+  return `${left}.....${right}`;
+}
 
 export default UnifiedBalance;

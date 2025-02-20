@@ -13,10 +13,6 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      return savedTheme === "dark";
-    }
     // Fallback to system preference
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
@@ -24,22 +20,13 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleTheme = () => {
     setIsDarkMode((prev) => {
       const newMode = !prev;
-      localStorage.setItem("theme", newMode ? "dark" : "light");
       return newMode;
     });
   };
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  useEffect(() => {
     const handleMediaChange = (event: MediaQueryListEvent) => {
       const theme = event.matches ? "dark" : "light";
-      localStorage.setItem("theme", theme);
       setIsDarkMode(theme == "dark");
     };
 
