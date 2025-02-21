@@ -50,13 +50,16 @@ function App() {
 
 ## Hooks
 
-### useSendTransaction
+### Wagmi hook replacements
 
 ```ts
-import { useSendTransaction } from "@arcana/ca-wagmi"
+import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 
 // has same API as wagmi `useSendTransaction`
 const { sendTransaction } = useSendTransaction() 
+
+// has same API as wagmi `useWriteContract`
+const { writeContract } = useWriteContract() 
 ```
 
 ### useBalance

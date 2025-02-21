@@ -8,11 +8,37 @@ import {
 import {
   useBalance,
   useSendTransaction,
+  useWriteContract,
   useUnifiedBalance,
 } from "@arcana/ca-wagmi";
+import { Toast, Toaster, createToaster } from "@ark-ui/react/toast";
+
 import { useState } from "react";
 import Decimal from "decimal.js";
-import { encodeFunctionData, erc20Abi } from "viem";
+import { erc20Abi } from "viem";
+const toaster = createToaster({
+  placement: "top-end",
+  overlap: false,
+  gap: 24,
+  duration: 10000,
+});
+
+const createSuccessToast = (chain: number, hash: `0x${string}`) => {
+  toaster.create({
+    title: "Success",
+    description: "Transaction submitted!",
+    type: "info",
+    action: {
+      label: "Show in explorer",
+      onClick: () => {
+        const base = idToExplorer[chain];
+        if (base) {
+          window.open(new URL(`/tx/${hash}`, base), "_blank");
+        }
+      },
+    },
+  });
+};
 
 export function Account() {
   const { sendTransaction } = useSendTransaction();
@@ -25,14 +51,14 @@ export function Account() {
   if (!loading) {
     console.log({ assetBalance: getAssetBalance("ETH") });
   }
-  const { switchChain } = useSwitchChain();
+  const { switchChainAsync } = useSwitchChain();
+  const { writeContract } = useWriteContract();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    const form = e.currentTarget;
     try {
-      const form = e.currentTarget;
       const formData = new FormData(form);
 
       const toFV = formData.get("to");
@@ -42,69 +68,127 @@ export function Account() {
       if (!toFV || !chainFV || !assetFV || !amountFV) {
         throw new Error("missing params");
       }
-      let data: undefined | `0x${string}` = undefined;
       const to = toFV as `0x${string}`;
       const chain = Number(chainFV);
-      const asset = assetFV as "usdc" | "usdt";
-      const chainData = chainToCurrency[chain];
-      const s = chainData[asset === "usdc" ? 0 : 1];
-      if (!s) {
-        throw new Error("asset not supported");
-      }
-      switchChain(
-        { chainId: chain },
-        {
-          onSuccess() {
-            let value = undefined;
+      const asset = assetFV as "usdc" | "usdt" | "eth";
+      await switchChainAsync({ chainId: chain });
 
-            let amount = new Decimal(amountFV as string);
-            let native = true;
-            if (asset.toLowerCase() === "ETH".toLowerCase()) {
-              amount = amount.mul(new Decimal(10).pow(18));
-              value = BigInt(amount.toString());
-            } else {
-              native = false;
-              amount = amount.mul(new Decimal(10).pow(6));
-              data = encodeFunctionData({
-                abi: erc20Abi,
-                functionName: "transfer",
-                args: [to, BigInt(amount.toString())],
-              });
-            }
-
-            sendTransaction(
-              {
-                to: native ? to : s,
-                data,
-                value,
-              },
-              {
-                onSuccess() {
-                  setLoading(false);
-                  console.log("success");
-                },
-                onSettled() {
-                  console.log("settled");
-                },
-                onError(error) {
-                  console.log({ error });
-                  setLoading(false);
-                },
-              }
-            );
+      let amount = new Decimal(amountFV as string);
+      if (asset.toLowerCase() === "ETH".toLowerCase()) {
+        amount = amount.mul(new Decimal(10).pow(18));
+        const value = BigInt(amount.toString());
+        sendTransaction(
+          {
+            to,
+            value,
           },
-          onError(e) {
-            console.log("error while switching chain", e);
-          },
+          {
+            onSuccess(hash) {
+              createSuccessToast(chain, hash);
+              form.reset();
+              setLoading(false);
+              console.log("success");
+            },
+            onSettled() {
+              console.log("settled");
+            },
+            onError(error) {
+              console.log({ error });
+              form.reset();
+              setLoading(false);
+            },
+          }
+        );
+      } else {
+        const chainData = chainToCurrency[chain];
+        const s = chainData[asset === "usdc" ? 0 : 1];
+        if (!s) {
+          throw new Error("asset not supported");
         }
-      );
+
+        writeContract(
+          {
+            address: s,
+            abi: erc20Abi,
+            functionName: "transfer",
+            args: [to, BigInt(amount.mul(new Decimal(10).pow(6)).toString())],
+          },
+          {
+            onSuccess(hash) {
+              createSuccessToast(chain, hash);
+              form.reset();
+              setLoading(false);
+              console.log("success");
+            },
+            onError(error) {
+              form.reset();
+              setLoading(false);
+              console.log({ error });
+            },
+          }
+        );
+      }
     } catch (e) {
+      form.reset();
       console.log({ e });
       setLoading(false);
     }
   };
   return (
     <>
+      <Toaster toaster={toaster} className="w-full">
+        {(toast) => (
+          <Toast.Root className="flex items-center w-full max-w-md p-4 mb-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800">
+            <Toast.Description className="basis-3/6 flex items-center">
+              <div className="inline-flex items-center justify-center shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+                <svg
+                  className="w-5 h-5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="sr-only">Check icon</span>
+              </div>
+              <div className="ms-3 text-sm font-normal">
+                {toast.description}
+              </div>
+            </Toast.Description>
+            {toast.action && (
+              <Toast.ActionTrigger className="cursor-pointer basis-2/6 text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700">
+                {toast.action?.label}
+              </Toast.ActionTrigger>
+            )}
+            <Toast.CloseTrigger className="basis-1/6">
+              <button
+                type="button"
+                className="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                data-dismiss-target="#toast-danger"
+                aria-label="Close"
+              >
+                <span className="sr-only">Close</span>
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </Toast.CloseTrigger>
+          </Toast.Root>
+        )}
+      </Toaster>
       {loading ? (
         <div role="status" className="flex items-center justify-center">
           <svg
@@ -127,7 +211,7 @@ export function Account() {
         </div>
       ) : (
         <>
-          <p className="text-center p-4 mb-4 font-bold leading-none tracking-tight text-gray-900 border-2 border-gray-200 rounded-lg dark:text-white">
+          <p className="text-sm text-center p-4 mb-4 font-bold leading-none tracking-tight text-gray-900 border-2 border-gray-200 rounded-lg dark:text-white">
             {address && ensName ? `${ensName} (${address})` : address}
           </p>
           <div className="mb-4 m-auto flex justify-center">
@@ -212,12 +296,7 @@ export function Account() {
                 required
               />
             </div>
-            {/* <button
-      type="submit"
-      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-    >
-      Submit
-    </button> */}
+
             <button
               type="submit"
               disabled={allLoading}
@@ -294,4 +373,14 @@ const chainToCurrency: {
     "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     "0xa219439258ca9da29e9cc4ce5596924745e12b93",
   ],
+};
+
+const idToExplorer: { [k: number]: string } = {
+  1: "https://etherscan.io/",
+  10: "https://optimistic.etherscan.io/",
+  137: "https://polygonscan.com/",
+  42161: "https://arbiscan.io/",
+  8453: "https://basescan.org/",
+  534352: "https://scrollscan.com/",
+  59144: "https://lineascan.build/",
 };

@@ -1,16 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import Loader from "../assets/videos/Loader_Light.webm";
-import DarkLoader from "../assets/videos/Loader_Dark.webm";
-import ProcessLoader from "../assets/videos/Circle_Loader.webm";
-import ProcessLoaderDark from "../assets/videos/Circle_Loader_Dark.webm";
+import Loader from "./shared/Loader";
 import Success from "../assets/videos/success.webm";
-import Error from "../assets/videos/Error.webm";
 import SuccessCheck from "../assets/images/SuccessCheck.svg";
 import ErrorCheck from "../assets/images/ErrorExclamation.svg";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
-import { getChainDetails, getLogo } from "../utils/commonFunction";
-import { symbolToLogo } from "../utils/getLogoFromSymbol";
 import { useTheme } from "./ThemeProvider";
 import type { onAllowanceHookSource } from "@arcana/ca-sdk";
 
@@ -57,6 +51,16 @@ const Button = styled.button`
 const Video = styled.video`
   height: 8rem;
   position: relative;
+  animation: fadeIn 0.5s;
+  margin: 0 auto;
+`;
+
+const BigLoaderWrap = styled.div`
+  width: 5rem;
+  margin: 1rem auto;
+`;
+const LoaderWrap = styled.div`
+  width: 2rem;
   animation: fadeIn 0.5s;
 `;
 
@@ -250,24 +254,6 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
   return (
     <>
       {state === "error" ? (
-        <Video
-          src={Error}
-          autoPlay
-          muted
-          onContextMenu={(e) => e.preventDefault()}
-        />
-      ) : state === "success" ? (
-        <Video
-          src={Success}
-          autoPlay
-          muted
-          onContextMenu={(e) => e.preventDefault()}
-        />
-      ) : (
-        ""
-      )}
-
-      {state === "error" ? (
         <>
           <Title>Oops!</Title>
           <Description>Something went wrong during the setup. </Description>
@@ -287,13 +273,9 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
               onContextMenu={(e) => e.preventDefault()}
             />
           ) : (
-            <Video
-              src={isDarkMode ? DarkLoader : Loader}
-              autoPlay
-              loop
-              muted
-              onContextMenu={(e) => e.preventDefault()}
-            />
+            <BigLoaderWrap>
+              <Loader $width="13px" />
+            </BigLoaderWrap>
           )}
 
           <SectionWrap>
@@ -322,15 +304,9 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
                     <StyledCheckboxControl checked={src.done || false}>
                       {src.done === false ? (
                         index == currentStep - 1 ? (
-                          <ProcessVideo
-                            src={isDarkMode ? ProcessLoaderDark : ProcessLoader}
-                            ref={videoRef}
-                            muted
-                            autoPlay
-                            playsInline
-                            preload="auto"
-                            onContextMenu={(e) => e.preventDefault()}
-                          />
+                          <LoaderWrap>
+                            <Loader $width="4px" />
+                          </LoaderWrap>
                         ) : (
                           "-"
                         )

@@ -1,25 +1,16 @@
 import React from "react";
+import Loader from "./shared/Loader";
 import styled from "styled-components";
-import { useTheme } from "./ThemeProvider";
-import DarkLoader from "../assets/videos/Loader_Dark.webm";
-import Loader from "../assets/videos/Loader_Light.webm";
 
-const Video = styled.video`
-  height: 8rem;
-  position: relative;
-  animation: fadeIn 0.5s;
+const LoaderWrap = styled.div`
+  width: 5rem;
+  margin: 1rem auto;
 `;
-
 const EmptyLoader = () => {
-  const { isDarkMode } = useTheme();
   return (
-    <Video
-      src={isDarkMode ? DarkLoader : Loader}
-      autoPlay
-      loop
-      muted
-      onContextMenu={(e) => e.preventDefault()}
-    />
+    <LoaderWrap>
+      <Loader $width="13px" />
+    </LoaderWrap>
   );
 };
 
