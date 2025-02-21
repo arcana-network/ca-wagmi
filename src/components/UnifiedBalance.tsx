@@ -413,8 +413,12 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
           <CurrencySmall>{total.toString().split(".")[1]}</CurrencySmall>
         </Balance>
         <AddressCard>
-          <span>{truncateMid(address!)}</span>
-          <CopySVG address={address!} />
+          <AppTooltip message={address} $full={true}>
+            <span>{truncateMid(address!)}</span>
+          </AppTooltip>
+          <AppTooltip message="Click to copy">
+            <CopySVG address={address!} />
+          </AppTooltip>
         </AddressCard>
       </BalanceCard>
       <BreakdownCard>
