@@ -6,35 +6,10 @@ import NohemiRegular from "../assets/fonts/nohemi/Nohemi-Regular.woff2";
 
 const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 700;
-  src: url(${NohemiBold});
-}
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 600;
-  src: url(${NohemiSemiBold});
-}
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 500;
-  src: url(${NohemiMedium});
-}
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 400;
-  src: url(${NohemiRegular});
-}
-
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Bold-WZIeKJtIWPKPZmx4INENIkapoXPehJ.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Medium-pBShVkTxu1a7zL7t9s8kSy3CtBtVHH.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Regular-DUcMLV9rm0J6Vz2aeEP00pefAyzt1S.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-SemiBold-g6evWhJlyeIsTotRjBBANMIb3MjbMG.woff2');
 
 body {
     font-family: 'Inter', sans-serif;

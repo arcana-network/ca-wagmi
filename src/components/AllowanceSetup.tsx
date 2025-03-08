@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Loader from "./shared/Loader";
-import Success from "../assets/videos/success.webm";
-import SuccessCheck from "../assets/images/SuccessCheck.svg";
-import ErrorCheck from "../assets/images/ErrorExclamation.svg";
+import { VIDEO_LINKS, IMAGE_LINKS } from "../utils/assetList";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
 import { useTheme } from "./ThemeProvider";
 import type { onAllowanceHookSource } from "@arcana/ca-sdk";
@@ -267,7 +265,7 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
         <>
           {inProgressState === "success" ? (
             <Video
-              src={Success}
+              src={VIDEO_LINKS["success"]}
               autoPlay
               muted
               onContextMenu={(e) => e.preventDefault()}
@@ -312,14 +310,14 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
                         )
                       ) : src.done === true ? (
                         <img
-                          src={SuccessCheck}
+                          src={IMAGE_LINKS["success"]}
                           alt="Success"
                           width={20}
                           height={20}
                         />
                       ) : (
                         <img
-                          src={ErrorCheck}
+                          src={IMAGE_LINKS["error"]}
                           alt="Error"
                           width={20}
                           height={20}

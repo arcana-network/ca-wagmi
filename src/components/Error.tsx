@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Error from "../assets/videos/Error.webm";
+import { VIDEO_LINKS } from "../utils/assetList";
 
 const Title = styled.h2`
   font-family: "Nohami", sans-serif;
@@ -49,7 +49,7 @@ const ErrorBox: React.FC<{
   return (
     <>
       <Video
-        src={Error}
+        src={VIDEO_LINKS["error"]}
         autoPlay
         muted
         onContextMenu={(e) => e.preventDefault()}

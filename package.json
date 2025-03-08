@@ -1,6 +1,6 @@
 {
   "name": "@arcana/ca-wagmi",
-  "version": "0.0.5",
+  "version": "0.0.6-beta.4",
   "description": "Plug n play CA library to work with wagmi",
   "main": "dist/index.js",
   "exports": {
@@ -14,8 +14,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc && npm run copyAssets",
-    "copyAssets": "cp -R src/assets dist/assets",
+    "build": "rimraf dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "htmldocs": "typedoc --options typedochtml.json",
     "prepublishOnly": "npm run build"
@@ -24,13 +23,13 @@
   "license": "MIT",
   "dependencies": {
     "@arcana/ca-sdk": "^0.0.5",
-    "@ark-ui/react": "^4.9.1",
+    "@ark-ui/react": "^5.0.0",
     "axios": "^1.7.9",
     "decimal.js": "^10.5.0",
-    "styled-components": "^6.1.14"
+    "styled-components": "^6.1.15"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
+    "react": ">=19.0.0",
     "wagmi": "^2.13.4"
   },
   "devDependencies": {

@@ -8,6 +8,7 @@ import { WagmiProvider } from 'wagmi'
 import { config } from './config'
 import { CAProvider } from '@arcana/ca-wagmi'
 import { App } from "./App"
+
 const queryClient = new QueryClient()
 
 function App() {
@@ -62,13 +63,17 @@ const { sendTransaction } = useSendTransaction()
 const { writeContract } = useWriteContract() 
 ```
 
-### useBalance
+### Arcana hooks
 
 ```ts
-import { useBalance } from "@arcana/ca-wagmi"
+import { useBalance, useCAFn, useUnifiedBalance } from "@arcana/ca-wagmi"
 
-const { showBalance } = useBalance();
+// Balance modal show and hide
+const { showBalance, hideBalance } = useBalance();
 
-// displays a modal with unified balance
-showBalance()
+// Balances for supported assets across supported chains
+const { balance, balances, getAssetBalance, loading } = useUnifiedBalance();
+
+// Helper functions for transfer and bridge
+const { tranfer, bridge } = useCAFn()
 ```

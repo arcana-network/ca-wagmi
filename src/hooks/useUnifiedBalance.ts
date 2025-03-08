@@ -15,12 +15,9 @@ const useUnifiedBalance = () => {
       return ca
         .getUnifiedBalances()
         .then((val) => {
-          console.log({ val });
           setBalances(val);
           setLoading(false);
-          const ethBalance = balances.find(
-            (b) => b.symbol.toLowerCase() === "eth"
-          );
+          const ethBalance = val.find((b) => b.symbol.toLowerCase() === "eth");
           if (ethBalance) {
             setBalance(
               BigInt(

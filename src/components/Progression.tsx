@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import Loader from "./shared/Loader";
-import Success from "../assets/videos/success.webm";
-import Error from "../assets/videos/Error.webm";
-import SuccessCheck from "../assets/images/SuccessCheck.svg";
-import ErrorCheck from "../assets/images/ErrorExclamation.svg";
-import Link from "../assets/images/Link.svg";
+import { VIDEO_LINKS, IMAGE_LINKS } from "../utils/assetList";
 import { getTextFromStep } from "../utils/getTextFromSteps";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
 import { useTheme } from "./ThemeProvider";
@@ -224,14 +220,14 @@ const Progress: React.FC<IntentComponentProps> = ({
     <>
       {state === "error" ? (
         <Video
-          src={Error}
+          src={VIDEO_LINKS["error"]}
           autoPlay
           muted
           onContextMenu={(e) => e.preventDefault()}
         />
       ) : state === "success" ? (
         <Video
-          src={Success}
+          src={VIDEO_LINKS["success"]}
           autoPlay
           muted
           onContextMenu={(e) => e.preventDefault()}
@@ -254,7 +250,7 @@ const Progress: React.FC<IntentComponentProps> = ({
         <>
           {inProgressState === "success" ? (
             <Video
-              src={Success}
+              src={VIDEO_LINKS["success"]}
               autoPlay
               muted
               onContextMenu={(e) => e.preventDefault()}
@@ -297,14 +293,14 @@ const Progress: React.FC<IntentComponentProps> = ({
                       )
                     ) : step.done === true ? (
                       <img
-                        src={SuccessCheck}
+                        src={IMAGE_LINKS["success"]}
                         alt="Success"
                         width={20}
                         height={20}
                       />
                     ) : (
                       <img
-                        src={ErrorCheck}
+                        src={IMAGE_LINKS["error"]}
                         alt="Error"
                         width={20}
                         height={20}
@@ -317,7 +313,12 @@ const Progress: React.FC<IntentComponentProps> = ({
             {explorerURL && (
               <LinkContainer>
                 <StyledLink href={explorerURL} target="_blank">
-                  <img src={Link} alt="Link" width={20} height={20} />
+                  <img
+                    src={IMAGE_LINKS["link"]}
+                    alt="Link"
+                    width={20}
+                    height={20}
+                  />
                   <span>View Intent</span>
                 </StyledLink>
               </LinkContainer>

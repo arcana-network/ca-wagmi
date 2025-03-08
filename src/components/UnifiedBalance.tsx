@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import Cross from "../assets/images/Close.svg";
+import { IMAGE_LINKS } from "../utils/assetList";
 import { formatNumber, getReadableNumber } from "../utils/commonFunction";
 import { Accordion } from "@ark-ui/react";
 import AppTooltip from "./shared/Tooltip";
 import Decimal from "decimal.js";
-import Arrow from "../assets/images/ArraowDown.svg";
-import InfoIcon from "../assets/images/Info.svg";
 import { darkTheme } from "../utils/theme";
 import { useTheme } from "./ThemeProvider";
 import type { UserAsset } from "@arcana/ca-sdk";
@@ -402,7 +400,12 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
       <Header>
         <Title>Unified Balance</Title>
         <CloseIcon onClick={close}>
-          <Img src={Cross} alt="Description Image" height={20} width={20} />
+          <Img
+            src={IMAGE_LINKS["close"]}
+            alt="Description Image"
+            height={20}
+            width={20}
+          />
         </CloseIcon>
       </Header>
 
@@ -462,7 +465,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
                             <ChainAbstractedContainer $isdarkmode={isDarkMode}>
                               CA
                               <InfoImg
-                                src={InfoIcon}
+                                src={IMAGE_LINKS["info"]}
                                 alt="Info"
                                 height={10}
                                 width={10}
@@ -478,7 +481,12 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
                           {asset.breakdown.length > 1 ? "s" : ""}
                         </span>
                         <ItemIndicator>
-                          <img src={Arrow} alt="Arrow" height={10} width={10} />
+                          <img
+                            src={IMAGE_LINKS["caret"]}
+                            alt="Arrow"
+                            height={10}
+                            width={10}
+                          />
                         </ItemIndicator>
                       </ViewBreakupButton>
                     </TokenInfo>

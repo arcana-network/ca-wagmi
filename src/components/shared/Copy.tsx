@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import SuccessCheck from "../../assets/images/SuccessCheck.svg";
+import { IMAGE_LINKS } from "../../utils/assetList";
 
 const Icon = styled.svg`
   cursor: pointer;
@@ -23,7 +23,12 @@ const CopySVG = ({ address }: { address: string }) => {
   return (
     <>
       {copying ? (
-        <img src={SuccessCheck} alt="Success" width={10} height={10} />
+        <img
+          src={IMAGE_LINKS["success"]}
+          alt="Success"
+          width={10}
+          height={10}
+        />
       ) : (
         <Icon
           onClick={copy}

@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { Accordion } from "@ark-ui/react";
 import { getCoinbasePrices } from "../utils/coinbase";
 import AppTooltip from "./shared/Tooltip";
-import InfoIcon from "../assets/images/Info.svg";
-import Arrow from "../assets/images/ArraowDown.svg";
+import { IMAGE_LINKS } from "../utils/assetList";
 import { getReadableNumber } from "../utils/commonFunction";
 import Decimal from "decimal.js";
 
@@ -22,7 +21,6 @@ const AccordionWrapper = styled(Accordion.Item)`
 `;
 
 const ItemIndicator = styled(Accordion.ItemIndicator)`
-  height: 15px;
   width: 15px;
   margin-top: 2px;
   cursor: pointer;
@@ -346,7 +344,12 @@ const IntentView: React.FC<IntentViewProps> = ({
             <HeaderLeft>
               <TooltipMessage>Spend</TooltipMessage>
               <AppTooltip message="Total Fees">
-                <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                <InfoImg
+                  src={IMAGE_LINKS["info"]}
+                  alt="Info"
+                  height={18}
+                  width={18}
+                />
               </AppTooltip>
             </HeaderLeft>
             <HeaderRight>
@@ -371,7 +374,12 @@ const IntentView: React.FC<IntentViewProps> = ({
               <ViewBreakupButton>
                 <span>View Sources</span>
                 <ItemIndicator>
-                  <img src={Arrow} alt="Arrow" height={12} width={12} />
+                  <img
+                    src={IMAGE_LINKS["caret"]}
+                    alt="Arrow"
+                    height={12}
+                    width={12}
+                  />
                 </ItemIndicator>
               </ViewBreakupButton>
             </HeaderRight>
@@ -404,7 +412,12 @@ const IntentView: React.FC<IntentViewProps> = ({
             <HeaderLeft>
               <TooltipMessage>Total Fees</TooltipMessage>
               <AppTooltip message="Total Fees">
-                <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                <InfoImg
+                  src={IMAGE_LINKS["info"]}
+                  alt="Info"
+                  height={18}
+                  width={18}
+                />
               </AppTooltip>
             </HeaderLeft>
             <HeaderRight>
@@ -424,7 +437,12 @@ const IntentView: React.FC<IntentViewProps> = ({
               <ViewBreakupButton>
                 <span>View Breakup</span>
                 <ItemIndicator>
-                  <img src={Arrow} alt="Arrow" height={12} width={12} />
+                  <img
+                    src={IMAGE_LINKS["caret"]}
+                    alt="Arrow"
+                    height={12}
+                    width={12}
+                  />
                 </ItemIndicator>
               </ViewBreakupButton>
             </HeaderRight>
@@ -435,7 +453,12 @@ const IntentView: React.FC<IntentViewProps> = ({
                 <HeaderLeft>
                   <Label>CA Gas Fees: </Label>
                   <AppTooltip message="Total Fees">
-                    <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                    <InfoImg
+                      src={IMAGE_LINKS["info"]}
+                      alt="Info"
+                      height={18}
+                      width={18}
+                    />
                   </AppTooltip>
                 </HeaderLeft>
                 <HeaderRight>
@@ -459,7 +482,12 @@ const IntentView: React.FC<IntentViewProps> = ({
                 <HeaderLeft>
                   <Label>Solver Fees:</Label>
                   <AppTooltip message="Total Fees">
-                    <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                    <InfoImg
+                      src={IMAGE_LINKS["info"]}
+                      alt="Info"
+                      height={18}
+                      width={18}
+                    />
                   </AppTooltip>
                 </HeaderLeft>
                 <HeaderRight>
@@ -483,7 +511,12 @@ const IntentView: React.FC<IntentViewProps> = ({
                 <HeaderLeft>
                   <Label>Protocol Fees:</Label>
                   <AppTooltip message="Total Fees">
-                    <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                    <InfoImg
+                      src={IMAGE_LINKS["info"]}
+                      alt="Info"
+                      height={18}
+                      width={18}
+                    />
                   </AppTooltip>
                 </HeaderLeft>
                 <HeaderRight>
@@ -507,7 +540,12 @@ const IntentView: React.FC<IntentViewProps> = ({
                 <HeaderLeft>
                   <Label>Gas Supplied:</Label>
                   <AppTooltip message="Total Fees">
-                    <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+                    <InfoImg
+                      src={IMAGE_LINKS["info"]}
+                      alt="Info"
+                      height={18}
+                      width={18}
+                    />
                   </AppTooltip>
                 </HeaderLeft>
                 <HeaderRight>
@@ -538,7 +576,12 @@ const IntentView: React.FC<IntentViewProps> = ({
         <HeaderLeft>
           <TooltipMessage>Total</TooltipMessage>
           <AppTooltip message="Total Fees">
-            <InfoImg src={InfoIcon} alt="Info" height={18} width={18} />
+            <InfoImg
+              src={IMAGE_LINKS["info"]}
+              alt="Info"
+              height={18}
+              width={18}
+            />
           </AppTooltip>
         </HeaderLeft>
         <HeaderRight>

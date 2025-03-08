@@ -1,8 +1,6 @@
 import React, { ReactNode } from "react";
 import styled, { keyframes } from "styled-components";
-import Arcana from "../../assets/images/ArcanaFooter.svg";
-import { useCA } from "../../hooks/useCA";
-
+import { IMAGE_LINKS } from "../../utils/assetList";
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -52,7 +50,7 @@ const ModalOverlay = styled.div<{ $isopen: boolean }>`
   height: 100%;
   background: ${({ theme }) => theme.backgroundOverlyColor};
   animation: ${({ $isopen }) => ($isopen ? fadeIn : fadeOut)} 0.3s ease-out;
-  z-index: 1000;
+  z-index: 2147483645;
 `;
 
 const ModalContainer = styled.div<{ $isopen: boolean }>`
@@ -68,7 +66,7 @@ const ModalContainer = styled.div<{ $isopen: boolean }>`
   width: 90%;
   max-width: 400px;
   text-align: center;
-  z-index: 1050;
+  z-index: 2147483646;
   animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
 `;
 
@@ -102,7 +100,7 @@ const Modal: React.FC<ModalProps> = ({ isopen, children }) => {
 
         <Footer>
           Powered by
-          <Img src={Arcana} alt="Description Image" />
+          <Img src={IMAGE_LINKS["footer"]} alt="Description Image" />
         </Footer>
       </ModalContainer>
     </ModalOverlay>
