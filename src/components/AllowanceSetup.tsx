@@ -216,7 +216,7 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
     if (inProgressState === "success") {
       window.setTimeout(() => {
         close();
-      }, 500);
+      }, 1000);
     }
   }, [inProgressState, close]);
   useEffect(() => {
@@ -331,14 +331,6 @@ const AllowanceSetup: React.FC<IntentComponentProps> = ({
           </Card>
         </>
       )}
-
-      <Button onClick={close}>
-        {state === "error"
-          ? "Retry"
-          : state === "success"
-          ? "Continue"
-          : "Close"}
-      </Button>
     </>
   );
 };

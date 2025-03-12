@@ -326,14 +326,6 @@ const Progress: React.FC<IntentComponentProps> = ({
           </Container>
         </>
       )}
-
-      <Button onClick={close}>
-        {state === "error"
-          ? "Retry"
-          : state === "success"
-          ? "Continue"
-          : "Close"}
-      </Button>
     </>
   );
 };
