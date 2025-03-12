@@ -13,6 +13,12 @@ const Wrapper = styled.div`
   padding-top: 1.5rem;
   gap: 1rem;
 `;
+const Root = styled(Accordion.Root)`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+`;
 
 const AccordionWrapper = styled(Accordion.Item)`
   display: flex;
@@ -67,7 +73,7 @@ const TotalAtDestination = styled.span`
 
 const TotalFeesValue = styled.span`
   font-family: "Inter", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 500;
   color: ${({ theme }) => theme.primaryColor};
 `;
@@ -97,6 +103,12 @@ const ViewBreakupButton = styled(Accordion.ItemTrigger)`
   border: none;
   background: transparent;
   cursor: pointer;
+  padding: 0;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const AccordionContent = styled(Accordion.ItemContent)`
@@ -338,12 +350,12 @@ const IntentView: React.FC<IntentViewProps> = ({
           <Chain>{intent.destination.chainName}</Chain>
         </ChainDetails>
       </Content>
-      <Accordion.Root multiple collapsible>
-        <AccordionWrapper key={1} value="fee-breakup">
+      <Root defaultValue={["sources"]} collapsible>
+        <AccordionWrapper key={"sources"} value="sources">
           <Header>
             <HeaderLeft>
               <TooltipMessage>Spend</TooltipMessage>
-              <AppTooltip message="Total Fees">
+              <AppTooltip message="Total Spend">
                 <InfoImg
                   src={IMAGE_LINKS["info"]}
                   alt="Info"
@@ -405,9 +417,7 @@ const IntentView: React.FC<IntentViewProps> = ({
             </FeeDetails>
           </AccordionContent>
         </AccordionWrapper>
-      </Accordion.Root>
-      <Accordion.Root multiple collapsible>
-        <AccordionWrapper value="fee-breakup">
+        <AccordionWrapper key={"fees"} value="fees">
           <Header>
             <HeaderLeft>
               <TooltipMessage>Total Fees</TooltipMessage>
@@ -452,12 +462,12 @@ const IntentView: React.FC<IntentViewProps> = ({
               <FeeRow>
                 <HeaderLeft>
                   <Label>CA Gas Fees: </Label>
-                  <AppTooltip message="Total Fees">
+                  <AppTooltip message="Gas Fees">
                     <InfoImg
                       src={IMAGE_LINKS["info"]}
                       alt="Info"
-                      height={18}
-                      width={18}
+                      height={14}
+                      width={14}
                     />
                   </AppTooltip>
                 </HeaderLeft>
@@ -466,27 +476,17 @@ const IntentView: React.FC<IntentViewProps> = ({
                     {getReadableNumber(intent.fees.caGas)}{" "}
                     {intent?.token?.symbol}
                   </Value>
-                  {/* {rates?.[intent?.token?.symbol] && (
-                    <USDValue>
-                      ~
-                      {(
-                        Number(intent?.sourcesTotal) /
-                        Number(rates[intent?.token?.symbol])
-                      ).toFixed(2)}{" "}
-                      USD
-                    </USDValue>
-                  )} */}
                 </HeaderRight>
               </FeeRow>
               <FeeRow>
                 <HeaderLeft>
                   <Label>Solver Fees:</Label>
-                  <AppTooltip message="Total Fees">
+                  <AppTooltip message="Solver Fees">
                     <InfoImg
                       src={IMAGE_LINKS["info"]}
                       alt="Info"
-                      height={18}
-                      width={18}
+                      height={14}
+                      width={14}
                     />
                   </AppTooltip>
                 </HeaderLeft>
@@ -495,27 +495,17 @@ const IntentView: React.FC<IntentViewProps> = ({
                     {getReadableNumber(intent.fees.solver)}{" "}
                     {intent?.token?.symbol}
                   </Value>
-                  {/* {rates?.[intent?.token?.symbol] && (
-                    <USDValue>
-                      ~
-                      {(
-                        Number(intent?.sourcesTotal) /
-                        Number(rates[intent?.token?.symbol])
-                      ).toFixed(2)}{" "}
-                      USD
-                    </USDValue>
-                  )} */}
                 </HeaderRight>
               </FeeRow>
               <FeeRow>
                 <HeaderLeft>
                   <Label>Protocol Fees:</Label>
-                  <AppTooltip message="Total Fees">
+                  <AppTooltip message="Protocol Fees">
                     <InfoImg
                       src={IMAGE_LINKS["info"]}
                       alt="Info"
-                      height={18}
-                      width={18}
+                      height={14}
+                      width={14}
                     />
                   </AppTooltip>
                 </HeaderLeft>
@@ -524,27 +514,17 @@ const IntentView: React.FC<IntentViewProps> = ({
                     {getReadableNumber(intent.fees.protocol)}{" "}
                     {intent?.token?.symbol}
                   </Value>
-                  {/* {rates?.[intent?.token?.symbol] && (
-                    <USDValue>
-                      ~
-                      {(
-                        Number(intent?.sourcesTotal) /
-                        Number(rates[intent?.token?.symbol])
-                      ).toFixed(2)}{" "}
-                      USD
-                    </USDValue>
-                  )} */}
                 </HeaderRight>
               </FeeRow>
               <FeeRow>
                 <HeaderLeft>
                   <Label>Gas Supplied:</Label>
-                  <AppTooltip message="Total Fees">
+                  <AppTooltip message="Extra gas supplied">
                     <InfoImg
                       src={IMAGE_LINKS["info"]}
                       alt="Info"
-                      height={18}
-                      width={18}
+                      height={14}
+                      width={14}
                     />
                   </AppTooltip>
                 </HeaderLeft>
@@ -555,27 +535,17 @@ const IntentView: React.FC<IntentViewProps> = ({
                       " " +
                       intent?.token?.symbol}
                   </Value>
-                  {/* {rates?.[intent?.token?.symbol] && (
-                    <USDValue>
-                      ~
-                      {(
-                        Number(intent?.sourcesTotal) /
-                        Number(rates[intent?.token?.symbol])
-                      ).toFixed(2)}{" "}
-                      USD
-                    </USDValue>
-                  )} */}
                 </HeaderRight>
               </FeeRow>
             </FeeDetails>
           </AccordionContent>
         </AccordionWrapper>
-      </Accordion.Root>
+      </Root>
 
       <Header>
         <HeaderLeft>
           <TooltipMessage>Total</TooltipMessage>
-          <AppTooltip message="Total Fees">
+          <AppTooltip message="Total Spend + Fees">
             <InfoImg
               src={IMAGE_LINKS["info"]}
               alt="Info"
