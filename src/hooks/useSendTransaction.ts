@@ -16,7 +16,7 @@ function useSendTransaction<
   parameters: UseSendTransactionParameters<config, context> = {}
 ): UseSendTransactionReturnType<config, context> {
   const r = internalUseSendTransaction(parameters);
-  const { ca } = useCA();
+  const { ca, ready } = useCA();
   const { setError } = useContext(CAErrorContext);
   const originalSendTx = r.sendTransaction;
 
@@ -24,7 +24,7 @@ function useSendTransaction<
     variables: Parameters<UseSendTransactionReturnType["sendTransaction"]>[0],
     options?: Parameters<typeof r.sendTransaction>[1]
   ) => {
-    if (ca) {
+    if (ca && ready) {
       ca.preprocess({
         to: variables.to ? variables.to : undefined,
         data: variables.data ? variables.data : undefined,

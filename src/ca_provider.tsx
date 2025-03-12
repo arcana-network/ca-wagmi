@@ -64,7 +64,11 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
                     <AllowanceSetup
                       sources={allowanceP.current.sources}
                       state="inprogress"
-                      close={() => setCurrentStep("loading")}
+                      close={() =>
+                        setCurrentStep((step) =>
+                          step !== "intent" ? "loading" : step
+                        )
+                      }
                     />
                   )}
                   <UnifiedBalance

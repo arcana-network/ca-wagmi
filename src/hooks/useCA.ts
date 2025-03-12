@@ -1,12 +1,11 @@
 import { useContext } from "react";
 import { CAContext, CAErrorContext } from "../context";
+import { ALLOWED_TOKENS } from "../utils/constants";
 
 export const useCA = () => {
   const ca = useContext(CAContext);
   return ca;
 };
-
-type AllowedTokens = "eth" | "usdc" | "usdt";
 
 export const useCAFn = () => {
   const { ca, ready } = useContext(CAContext);
@@ -15,7 +14,7 @@ export const useCAFn = () => {
   const transfer = async (params: {
     to: `0x${string}`;
     amount: string;
-    token: AllowedTokens | Uppercase<AllowedTokens>;
+    token: ALLOWED_TOKENS;
     chain?: number;
   }) => {
     if (!ready || !ca) {
@@ -41,7 +40,7 @@ export const useCAFn = () => {
 
   const bridge = async (params: {
     amount: string;
-    token: AllowedTokens | Uppercase<AllowedTokens>;
+    token: ALLOWED_TOKENS;
     chain?: number;
     gas?: bigint;
   }) => {

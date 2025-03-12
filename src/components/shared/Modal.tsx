@@ -97,10 +97,9 @@ const Modal: React.FC<ModalProps> = ({ isopen, children }) => {
     <ModalOverlay $isopen={isopen}>
       <ModalContainer $isopen={isopen}>
         {children}
-
         <Footer>
           Powered by
-          <Img src={IMAGE_LINKS["footer"]} alt="Description Image" />
+          <Img src={IMAGE_LINKS["footer"]} alt="Powered by arcana" />
         </Footer>
       </ModalContainer>
     </ModalOverlay>

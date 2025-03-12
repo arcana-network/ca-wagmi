@@ -18,11 +18,11 @@ function useWriteContract<
 ): UseWriteContractReturnType<config, context> {
   const wcr = internalUseWriteContract(parameters);
   const originalWC = wcr.writeContract;
-  const { ca } = useCA();
+  const { ca, ready } = useCA();
   const { setError } = useContext(CAErrorContext);
 
   const writeContract: typeof originalWC = (variables, options?) => {
-    if (ca) {
+    if (ca && ready) {
       const data = encodeFunctionData(
         variables as Parameters<typeof originalWC>[0]
       );
