@@ -56,11 +56,11 @@ function App() {
 ```ts
 import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 
-// has same API as wagmi `useSendTransaction`
-const { sendTransaction } = useSendTransaction() 
+// has same API as wagmi `useSendTransaction` and `useSendTransactionAsync`
+const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
 
-// has same API as wagmi `useWriteContract`
-const { writeContract } = useWriteContract() 
+// has same API as wagmi `useWriteContract` and `useWriteContractAsync`
+const { writeContract, writeContractAsync } = useWriteContract() 
 ```
 
 ### Arcana hooks
@@ -150,8 +150,16 @@ const { writeContract } = useWriteContract()
 >
 >  const { bridge, transfer } = useCAFn()
 > 
->  await bridge({ token: "usdt", amount: "1.5 "})
+>  await bridge({
+>    token: "usdt",
+>    amount: "1.5",
+>    chain: 42161
+>  })
 > 
->  const hash = await transfer({ to: "0x80129F3d408545e51d051a6D3e194983EB7801e8", token: "usdt", amount: "1.5" })
+>  const hash = await transfer({
+>    to: "0x80129F3d408545e51d051a6D3e194983EB7801e8",
+>    token: "usdt",
+>    amount: "1.5",
+>    chain: 10
+>  })
 > ```
-
