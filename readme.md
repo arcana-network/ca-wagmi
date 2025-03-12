@@ -65,15 +65,93 @@ const { writeContract } = useWriteContract()
 
 ### Arcana hooks
 
-```ts
-import { useBalance, useCAFn, useUnifiedBalance } from "@arcana/ca-wagmi"
+- `useBalance({ symbol: string })`
 
-// Balance modal show and hide
-const { showBalance, hideBalance } = useBalance();
+##### Parameters
 
-// Balances for supported assets across supported chains
-const { balance, balances, getAssetBalance, loading } = useUnifiedBalance();
+> | name      |  required     | type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | symbol      |  yes | string   | Should be one of the supported currencies |
 
-// Helper functions for transfer and bridge
-const { tranfer, bridge } = useCAFn()
-```
+##### Response
+
+> | parameter   | type             |
+> |-------------|-----------------------------------|
+> | loading     | `boolean` |
+> | value       | `{ symbol: string, decimals: number, formatted: string, value: bigint} \| null` |
+> | error       | `Error \| null` |
+
+##### Usage
+
+> ```javascript
+>  import { useBalance } from "@arcana/ca-wagmi"
+>
+>  const balance = useBalance({ symbol: "eth" })
+> ```
+
+##### Sample output
+
+> ```js
+> {
+>   loading: false,
+>   value: {
+>     symbol: "ETH",
+>     decimals: 18,
+>     formatted: "0.000785657313049966"
+>     value: 785657313049966n
+>   },
+>   error: null
+> } 
+> ```
+
+- `useBalanceModal()`
+
+##### Parameters
+
+> | name      |  required     | type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | None      |  None |  None  | None |
+
+
+##### Response
+
+> | parameter   | data type             |
+> |-------------|-----------------------------------|
+> | showModal     | `() => void` |
+> | hideModal     | `() => void` |
+
+##### Usage
+
+> ```javascript
+>  import { useBalanceModal } from "@arcana/ca-wagmi"
+>
+>  const { showModal, hideModal } = useBalanceModal()
+> ```
+
+- `useCAFn()`
+
+##### Parameters
+
+> | name      |  required     | type               | description                                                           |
+> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+> | None      |  None | None   | None |
+
+##### Response
+
+> | parameter   | data type             |
+> |-------------|-----------------------------------|
+> | bridge     | `({ token: string, amount: string, chain: number }) => Promise<unknown>` |
+> | transfer   | `({ token: string, amount: string, chain: number, to: "0x${string}" }) => Promise<unknown>` |
+
+##### Usage
+
+> ```javascript
+>  import { useCAFn } from "@arcana/ca-wagmi"
+>
+>  const { bridge, transfer } = useCAFn()
+> 
+>  await bridge({ token: "usdt", amount: "1.5 "})
+> 
+>  const hash = await transfer({ to: "0x80129F3d408545e51d051a6D3e194983EB7801e8", token: "usdt", amount: "1.5" })
+> ```
+
