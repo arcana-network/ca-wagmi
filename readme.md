@@ -56,10 +56,10 @@ function App() {
 ```ts
 import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 
-// Replaces `wagmi` API's: `useSendTransaction` and `useSendTransactionAsync`
+// Replaces `wagmi` hook: `useSendTransaction`
 const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
 
-// Replaces `wagmi` API's: `useWriteContract` and `useWriteContractAsync`
+// Replaces `wagmi` hook: `useWriteContract`
 const { writeContract, writeContractAsync } = useWriteContract() 
 ```
 
@@ -75,11 +75,11 @@ const { writeContract, writeContractAsync } = useWriteContract()
 
 ##### Response
 
-> | Parameter   | Type |
-> |-------------|------|
-> | loading     | `boolean` |
+> | Parameter   |            Type           |
+> |-------------|---------------------------|
+> | loading     |         `boolean`         |
 > | value       | `UseBalanceValue \| null` |
-> | error       | `Error \| null` |
+> | error       |      `Error \| null`      |
 
 ##### Usage
 
@@ -120,17 +120,17 @@ const { writeContract, writeContractAsync } = useWriteContract()
 
 ##### Parameters
 
-> |  Name  | Required |  Type  |                Description                |
-> |--------|----------|--------|-------------------------------------------|
-> |  None  |   None   |  None  | None |
+> |  Name  | Required |  Type  | Description |
+> |--------|----------|--------|-------------|
+> |  None  |   None   |  None  |     None    |
 
 ##### Response
 
-> | Parameter   | Type |
-> |-------------|------|
-> | loading     | `boolean` |
+> | Parameter   |           Type              |
+> |-------------|-----------------------------|
+> | loading     |         `boolean`           |
 > | value       | `UseBalanceValue[] \| null` |
-> | error       | `Error \| null` |
+> | error       |       `Error \| null`       |
 
 ##### Usage
 
@@ -200,8 +200,8 @@ const { writeContract, writeContractAsync } = useWriteContract()
 
 ##### Response
 
-> | Parameter | Type |
-> |-----------|------|
+> |  Parameter |                                    Type                                  |
+> |------------|--------------------------------------------------------------------------|
 > | bridge     | `({ token: string, amount: string, chain: number }) => Promise<unknown>` |
 > | transfer   | `({ token: string, amount: string, chain: number, to: "0x${string}" }) => Promise<unknown>` |
 
