@@ -56,29 +56,29 @@ function App() {
 ```ts
 import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 
-// has same API as wagmi `useSendTransaction` and `useSendTransactionAsync`
+// Replaces `wagmi` API's: `useSendTransaction` and `useSendTransactionAsync`
 const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
 
-// has same API as wagmi `useWriteContract` and `useWriteContractAsync`
+// Replaces `wagmi` API's: `useWriteContract` and `useWriteContractAsync`
 const { writeContract, writeContractAsync } = useWriteContract() 
 ```
 
 ### Arcana hooks
 
-- `useBalance({ symbol: string })`
+#### `useBalance({ symbol: string })`
 
 ##### Parameters
 
-> | name      |  required     | type               | description                                                           |
-> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | symbol      |  yes | string   | Should be one of the supported currencies |
+> |  Name  | Required |  Type  |                Description                |
+> |--------|----------|--------|-------------------------------------------|
+> | symbol |   yes    | string | Should be one of the supported currencies |
 
 ##### Response
 
-> | parameter   | type             |
-> |-------------|-----------------------------------|
+> | Parameter   | Type |
+> |-------------|------|
 > | loading     | `boolean` |
-> | value       | `{ symbol: string, decimals: number, formatted: string, value: bigint} \| null` |
+> | value       | `UseBalanceValue \| null` |
 > | error       | `Error \| null` |
 
 ##### Usage
@@ -98,25 +98,87 @@ const { writeContract, writeContractAsync } = useWriteContract()
 >     symbol: "ETH",
 >     decimals: 18,
 >     formatted: "0.000785657313049966"
->     value: 785657313049966n
+>     value: 785657313049966n,
+>     breakdown: [
+>       {
+>         chain: {
+>           id: 1,
+>           name: "Ethereum",
+>           logo: "..."
+>         },
+>         formatted: "0.000785657313049966",
+>         address: "0x0000000000000000000000000000000000000000",
+>         value: 785657313049966n
+>       }
+>     ]
 >   },
+>   error: null
+> }
+> ```
+
+#### `useBalances()`
+
+##### Parameters
+
+> |  Name  | Required |  Type  |                Description                |
+> |--------|----------|--------|-------------------------------------------|
+> |  None  |   None   |  None  | None |
+
+##### Response
+
+> | Parameter   | Type |
+> |-------------|------|
+> | loading     | `boolean` |
+> | value       | `UseBalanceValue[] \| null` |
+> | error       | `Error \| null` |
+
+##### Usage
+
+> ```javascript
+>  import { useBalances } from "@arcana/ca-wagmi"
+>
+>  const balances = useBalances()
+> ```
+
+##### Sample output
+
+> ```js
+> {
+>   loading: false,
+>   value: [{
+>     symbol: "ETH",
+>     decimals: 18,
+>     formatted: "0.000785657313049966"
+>     value: 785657313049966n,
+>     breakdown: [
+>       {
+>         chain: {
+>           id: 1,
+>           name: "Ethereum",
+>           logo: "..."
+>         },
+>         formatted: "0.000785657313049966",
+>         address: "0x0000000000000000000000000000000000000000",
+>         value: 785657313049966n
+>       }
+>     ]
+>   }],
 >   error: null
 > } 
 > ```
 
-- `useBalanceModal()`
+#### `useBalanceModal()`
 
 ##### Parameters
 
-> | name      |  required     | type               | description                                                           |
-> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | None      |  None |  None  | None |
-
+> | Name | Required | Type | Description |
+> |------|----------|------|-------------|
+> | None |   None   | None |     None    |
 
 ##### Response
 
-> | parameter   | data type             |
-> |-------------|-----------------------------------|
+> |   Parameter   |     Type     |
+> |---------------|--------------|
 > | showModal     | `() => void` |
 > | hideModal     | `() => void` |
 
@@ -128,18 +190,18 @@ const { writeContract, writeContractAsync } = useWriteContract()
 >  const { showModal, hideModal } = useBalanceModal()
 > ```
 
-- `useCAFn()`
+#### `useCAFn()`
 
 ##### Parameters
 
-> | name      |  required     | type               | description                                                           |
-> |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-> | None      |  None | None   | None |
+> | Name | Required | Type | Description |
+> |------|----------|------|-------------|
+> | None |   None   | None |     None    |
 
 ##### Response
 
-> | parameter   | data type             |
-> |-------------|-----------------------------------|
+> | Parameter | Type |
+> |-----------|------|
 > | bridge     | `({ token: string, amount: string, chain: number }) => Promise<unknown>` |
 > | transfer   | `({ token: string, amount: string, chain: number, to: "0x${string}" }) => Promise<unknown>` |
 

@@ -11,6 +11,9 @@ import GlobalStyles from "./components/GlobalStyles";
 import ErrorBox from "./components/Error";
 import { getCA } from "./ca";
 import { useCAInternal, useProvideCA } from "./hooks/useCAInternal";
+import Decimal from "decimal.js";
+
+Decimal.set({ toExpNeg: -18 });
 
 const provider = getCA();
 
