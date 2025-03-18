@@ -8,8 +8,8 @@ import {
 import {
   useSendTransaction,
   useWriteContract,
-  useUnifiedBalance,
   useBalanceModal,
+  useBalance,
 } from "@arcana/ca-wagmi";
 import { Toast, Toaster, createToaster } from "@ark-ui/react/toast";
 
@@ -47,10 +47,7 @@ export function Account() {
   const { disconnect } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
   const { showModal } = useBalanceModal();
-  const { loading, getAssetBalance } = useUnifiedBalance();
-  if (!loading) {
-    console.log({ assetBalance: getAssetBalance("ETH") });
-  }
+  const { loading } = useBalance({ symbol: "ETH" });
   const { switchChainAsync } = useSwitchChain();
   const { writeContract } = useWriteContract();
 
