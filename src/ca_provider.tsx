@@ -46,49 +46,34 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
             >
               <>
                 <Modal isopen={currentStep !== "none"}>
-                  {currentStep === "intent" && (
-                    <IntentView
-                      intent={intentP.current.intent}
-                      allow={intentAllow}
-                      deny={intentDeny}
-                      intentRefreshing={intentRefreshing}
-                    />
-                  )}
-                  {currentStep === "progression" && (
-                    <Progress
-                      state="inprogress"
-                      intentSteps={steps}
-                      close={() => {
-                        setCurrentStep("none");
-                      }}
-                    />
-                  )}
-                  {currentStep === "allowance" && (
-                    <AllowanceSetup
-                      sources={allowanceP.current.sources}
-                      state="inprogress"
-                      close={() =>
-                        setCurrentStep((step) =>
-                          step !== "intent" ? "loading" : step
-                        )
-                      }
-                    />
-                  )}
+                  <IntentView
+                    $display={currentStep === "intent"}
+                    intent={intentP.current.intent}
+                    allow={intentAllow}
+                    deny={intentDeny}
+                    intentRefreshing={intentRefreshing}
+                  />
+                  <Progress
+                    intentSteps={steps}
+                    $display={currentStep === "progression"}
+                    close={() => setCurrentStep("none")}
+                  />
+                  <AllowanceSetup
+                    $display={currentStep === "allowance"}
+                    sources={allowanceP.current.sources}
+                  />
                   <UnifiedBalance
                     $display={currentStep === "ub"}
                     close={() => setCurrentStep("none")}
                   />
-
-                  {currentStep === "loading" && <EmptyLoader />}
-                  {currentStep === "error" && (
-                    <ErrorBox
-                      message={error}
-                      close={() => {
-                        setError("");
-                        setCurrentStep("none");
-                      }}
-                    />
-                  )}
+                  <ErrorBox
+                    $display={currentStep === "error"}
+                    message={error}
+                    close={() => {
+                      setError("");
+                      setCurrentStep("none");
+                    }}
+                  />
                 </Modal>
               </>
               <>{children}</>

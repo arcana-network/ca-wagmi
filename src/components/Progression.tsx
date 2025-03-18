@@ -7,6 +7,10 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
 import { useTheme } from "./ThemeProvider";
 import type { ProgressStep } from "@arcana/ca-sdk";
 
+const MainContainer = styled.div<{ $display: boolean }>`
+  display: ${({ $display }) => ($display ? "block" : "none")};
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -142,8 +146,8 @@ const StyledLink = styled.a`
 `;
 
 interface IntentComponentProps {
-  state: "inprogress" | "success" | "error";
   intentSteps: Array<ProgressStep & { done: boolean }>;
+  $display: boolean;
   close: () => void;
 }
 
@@ -155,12 +159,10 @@ const stepList = [
 ];
 
 const Progress: React.FC<IntentComponentProps> = ({
-  state,
   intentSteps,
+  $display,
   close,
 }) => {
-  const { isDarkMode } = useTheme();
-  const videoRef = useRef<HTMLVideoElement>(null);
   const steps = intentSteps.filter((s) => stepList.includes(s.type));
   const incompleteStep = steps.findIndex((s) => s.done === false);
   const currentStep = incompleteStep === -1 ? steps.length : incompleteStep + 1;
@@ -171,61 +173,18 @@ const Progress: React.FC<IntentComponentProps> = ({
       return s.type === "INTENT_SUBMITTED" && s.done === true;
       // @ts-ignore
     })?.data.explorerURL ?? "";
-  console.log({ explorerURL });
-  console.log({
-    exp: steps.find((s) => {
-      return s.type === "INTENT_SUBMITTED" && s.done === true;
-    }),
-  });
 
   useEffect(() => {
-    if (inProgressState === "success") {
+    if (inProgressState === "success" && $display) {
       window.setTimeout(() => {
         close();
       }, 1000);
     }
   }, [inProgressState, close]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    const playVideo = () => {
-      video
-        .play()
-        .then(() => {
-          console.log("Video is autoplaying.");
-        })
-        .catch((err) => {
-          console.error("Autoplay failed:", err);
-        });
-    };
-
-    playVideo();
-
-    const handlePause = () => {
-      console.log("Video paused. Attempting to restart...");
-      playVideo();
-    };
-
-    video.addEventListener("pause", handlePause);
-
-    return () => {
-      video.removeEventListener("pause", handlePause);
-    };
-  }, []);
-
   return (
-    <>
-      {state === "error" ? (
-        <Video
-          src={VIDEO_LINKS["error"]}
-          autoPlay
-          muted
-          onContextMenu={(e) => e.preventDefault()}
-        />
-      ) : state === "success" ? (
+    <MainContainer $display={$display}>
+      {inProgressState === "success" ? (
         <Video
           src={VIDEO_LINKS["success"]}
           autoPlay
@@ -233,100 +192,75 @@ const Progress: React.FC<IntentComponentProps> = ({
           onContextMenu={(e) => e.preventDefault()}
         />
       ) : (
-        ""
+        <BigLoaderWrap>
+          <Loader $width="13px" />
+        </BigLoaderWrap>
       )}
 
-      {state === "error" ? (
-        <>
-          <Title>Oops!</Title>
-          <Description>Something went wrong during the setup. </Description>
-        </>
-      ) : state === "success" ? (
-        <>
-          <Title>Done</Title>
-          <Description>Done Great! Your account is ready to use. </Description>
-        </>
-      ) : (
-        <>
-          {inProgressState === "success" ? (
-            <Video
-              src={VIDEO_LINKS["success"]}
-              autoPlay
-              muted
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          ) : (
-            <BigLoaderWrap>
-              <Loader $width="13px" />
-            </BigLoaderWrap>
-          )}
-
-          <Container>
-            {steps.map((step, index: number) => (
-              <Checkbox.Root
-                value={step.type}
-                checked={step.done || false}
+      <Container>
+        {steps.map((step, index: number) => (
+          <Checkbox.Root
+            value={step.type}
+            checked={step.done || false}
+            disabled={
+              index !== 0 && !step.done && !intentSteps[index - 1]?.done
+            }
+            key={index}
+          >
+            <StyledCheckbox>
+              <StyledCheckboxLabel
                 disabled={
-                  index !== 0 && !step.done && !intentSteps[index - 1]?.done
+                  inProgressState != "success" &&
+                  !step.done &&
+                  index > incompleteStep
                 }
-                key={index}
               >
-                <StyledCheckbox>
-                  <StyledCheckboxLabel
-                    disabled={
-                      inProgressState != "success" &&
-                      !step.done &&
-                      index > incompleteStep
-                    }
-                  >
-                    {getTextFromStep(step.type, step.done || false)}
-                  </StyledCheckboxLabel>
+                {getTextFromStep(step.type, step.done || false)}
+              </StyledCheckboxLabel>
 
-                  <StyledCheckboxControl checked={step.done || false}>
-                    {step.done === false ? (
-                      index == currentStep - 1 ? (
-                        <LoaderWrap>
-                          <Loader $width="4px" />
-                        </LoaderWrap>
-                      ) : (
-                        "-"
-                      )
-                    ) : step.done === true ? (
-                      <img
-                        src={IMAGE_LINKS["success"]}
-                        alt="Success"
-                        width={20}
-                        height={20}
-                      />
-                    ) : (
-                      <img
-                        src={IMAGE_LINKS["error"]}
-                        alt="Error"
-                        width={20}
-                        height={20}
-                      />
-                    )}
-                  </StyledCheckboxControl>
-                </StyledCheckbox>
-              </Checkbox.Root>
-            ))}
-            {explorerURL && (
-              <LinkContainer>
-                <StyledLink href={explorerURL} target="_blank">
+              <StyledCheckboxControl checked={step.done || false}>
+                {step.done === false ? (
+                  index == currentStep - 1 ? (
+                    <LoaderWrap>
+                      <Loader $width="4px" />
+                    </LoaderWrap>
+                  ) : (
+                    "-"
+                  )
+                ) : step.done === true ? (
                   <img
-                    src={IMAGE_LINKS["link"]}
-                    alt="Link"
+                    src={IMAGE_LINKS["success"]}
+                    alt="Success"
                     width={20}
                     height={20}
                   />
-                  <span>View Intent</span>
-                </StyledLink>
-              </LinkContainer>
-            )}
-          </Container>
-        </>
-      )}
-    </>
+                ) : (
+                  <img
+                    src={IMAGE_LINKS["error"]}
+                    alt="Error"
+                    width={20}
+                    height={20}
+                  />
+                )}
+              </StyledCheckboxControl>
+            </StyledCheckbox>
+          </Checkbox.Root>
+        ))}
+        {explorerURL && (
+          <LinkContainer>
+            <StyledLink href={explorerURL} target="_blank">
+              <img
+                src={IMAGE_LINKS["link"]}
+                alt="Link"
+                width={20}
+                height={20}
+              />
+              <span>View Intent</span>
+            </StyledLink>
+          </LinkContainer>
+        )}
+      </Container>
+    </MainContainer>
   );
 };
 

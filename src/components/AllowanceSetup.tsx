@@ -6,6 +6,10 @@ import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
 import { useTheme } from "./ThemeProvider";
 import type { onAllowanceHookSource } from "@arcana/ca-sdk";
 
+const MainContainer = styled.div<{ $display: boolean }>`
+  display: ${({ $display }) => ($display ? "block" : "none")};
+`;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,15 +63,6 @@ const BigLoaderWrap = styled.div`
 `;
 const LoaderWrap = styled.div`
   width: 2rem;
-  animation: fadeIn 0.5s;
-`;
-
-const ProcessVideo = styled.video.attrs(() => ({
-  muted: true,
-  playsInline: true,
-}))`
-  height: 2rem;
-  position: relative;
   animation: fadeIn 0.5s;
 `;
 
@@ -194,144 +189,88 @@ const ChainName = styled.div`
 `;
 
 interface IntentComponentProps {
-  state: "inprogress" | "success" | "error";
   sources: Array<onAllowanceHookSource & { done: boolean }>;
-  close: () => void;
+  $display: boolean;
 }
 
 const AllowanceSetup: React.FC<IntentComponentProps> = ({
-  state,
   sources,
-  close,
+  $display,
 }) => {
   const { isDarkMode } = useTheme();
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const incompleteStep = sources.findIndex((s) => s.done === false);
   const currentStep =
     incompleteStep === -1 ? sources.length : incompleteStep + 1;
-  const inProgressState = incompleteStep === -1 ? "success" : "inprogress";
-
-  useEffect(() => {
-    if (inProgressState === "success") {
-      window.setTimeout(() => {
-        close();
-      }, 1000);
-    }
-  }, [inProgressState, close]);
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    const playVideo = () => {
-      video
-        .play()
-        .then(() => {
-          console.log("Video is autoplaying.");
-        })
-        .catch((err) => {
-          console.error("Autoplay failed:", err);
-        });
-    };
-
-    playVideo();
-
-    const handlePause = () => {
-      console.log("Video paused. Attempting to restart...");
-      playVideo();
-    };
-
-    video.addEventListener("pause", handlePause);
-
-    return () => {
-      video.removeEventListener("pause", handlePause);
-    };
-  }, []);
+  const state = incompleteStep === -1 ? "success" : "inprogress";
 
   return (
-    <>
-      {state === "error" ? (
-        <>
-          <Title>Oops!</Title>
-          <Description>Something went wrong during the setup. </Description>
-        </>
-      ) : state === "success" ? (
-        <>
-          <Title>Done</Title>
-          <Description>Done Great! Your account is ready to use. </Description>
-        </>
+    <MainContainer $display={$display}>
+      {state === "success" ? (
+        <Video
+          src={VIDEO_LINKS["success"]}
+          autoPlay
+          muted
+          onContextMenu={(e) => e.preventDefault()}
+        />
       ) : (
-        <>
-          {inProgressState === "success" ? (
-            <Video
-              src={VIDEO_LINKS["success"]}
-              autoPlay
-              muted
-              onContextMenu={(e) => e.preventDefault()}
-            />
-          ) : (
-            <BigLoaderWrap>
-              <Loader $width="13px" />
-            </BigLoaderWrap>
-          )}
-
-          <SectionWrap>
-            <SectionTitle isDarkMode={isDarkMode}>
-              SETUP ALLOWANCES
-            </SectionTitle>
-          </SectionWrap>
-          <Card>
-            {sources.map((src, index: number) => (
-              <Container key={index}>
-                <Checkbox.Root value={src.chainName} checked={src.done}>
-                  <StyledCheckbox>
-                    <StyledCheckboxLabel disabled={index >= currentStep}>
-                      <FlexContainer>
-                        <RelativeContainer>
-                          <Logo src={src.token.logo} alt="Token Logo" />
-                          <ChainLogo src={src.chainLogo} alt="Chain Logo" />
-                        </RelativeContainer>
-                        <TokenDetails>
-                          <TokenName>{src.token.name}</TokenName>
-                          <ChainName>{src.chainName}</ChainName>
-                        </TokenDetails>
-                      </FlexContainer>
-                    </StyledCheckboxLabel>
-
-                    <StyledCheckboxControl checked={src.done || false}>
-                      {src.done === false ? (
-                        index == currentStep - 1 ? (
-                          <LoaderWrap>
-                            <Loader $width="4px" />
-                          </LoaderWrap>
-                        ) : (
-                          "-"
-                        )
-                      ) : src.done === true ? (
-                        <img
-                          src={IMAGE_LINKS["success"]}
-                          alt="Success"
-                          width={20}
-                          height={20}
-                        />
-                      ) : (
-                        <img
-                          src={IMAGE_LINKS["error"]}
-                          alt="Error"
-                          width={20}
-                          height={20}
-                        />
-                      )}
-                    </StyledCheckboxControl>
-                  </StyledCheckbox>
-                </Checkbox.Root>
-              </Container>
-            ))}
-          </Card>
-        </>
+        <BigLoaderWrap>
+          <Loader $width="13px" />
+        </BigLoaderWrap>
       )}
-    </>
+
+      <SectionWrap>
+        <SectionTitle isDarkMode={isDarkMode}>SETUP ALLOWANCES</SectionTitle>
+      </SectionWrap>
+      <Card>
+        {sources.map((src, index: number) => (
+          <Container key={index}>
+            <Checkbox.Root value={src.chainName} checked={src.done}>
+              <StyledCheckbox>
+                <StyledCheckboxLabel disabled={index >= currentStep}>
+                  <FlexContainer>
+                    <RelativeContainer>
+                      <Logo src={src.token.logo} alt="Token Logo" />
+                      <ChainLogo src={src.chainLogo} alt="Chain Logo" />
+                    </RelativeContainer>
+                    <TokenDetails>
+                      <TokenName>{src.token.name}</TokenName>
+                      <ChainName>{src.chainName}</ChainName>
+                    </TokenDetails>
+                  </FlexContainer>
+                </StyledCheckboxLabel>
+
+                <StyledCheckboxControl checked={src.done || false}>
+                  {src.done === false ? (
+                    index == currentStep - 1 ? (
+                      <LoaderWrap>
+                        <Loader $width="4px" />
+                      </LoaderWrap>
+                    ) : (
+                      "-"
+                    )
+                  ) : src.done === true ? (
+                    <img
+                      src={IMAGE_LINKS["success"]}
+                      alt="Success"
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <img
+                      src={IMAGE_LINKS["error"]}
+                      alt="Error"
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </StyledCheckboxControl>
+              </StyledCheckbox>
+            </Checkbox.Root>
+          </Container>
+        ))}
+      </Card>
+    </MainContainer>
   );
 };
 

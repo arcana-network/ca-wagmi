@@ -7,12 +7,14 @@ import { IMAGE_LINKS } from "../utils/assetList";
 import { getReadableNumber } from "../utils/commonFunction";
 import Decimal from "decimal.js";
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $display: boolean }>`
   display: flex;
   flex-direction: column;
   padding-top: 1.5rem;
   gap: 1rem;
+  display: ${({ $display }) => ($display ? "block" : "none")};
 `;
+
 const Root = styled(Accordion.Root)`
   display: flex;
   flex-direction: column;
@@ -310,6 +312,7 @@ interface IntentViewProps {
   deny: () => void;
   allow: () => void;
   intentRefreshing: boolean;
+  $display: boolean;
 }
 
 const IntentView: React.FC<IntentViewProps> = ({
@@ -317,6 +320,7 @@ const IntentView: React.FC<IntentViewProps> = ({
   deny,
   intent,
   intentRefreshing,
+  $display,
 }) => {
   if (!intent) {
     return <></>;
@@ -339,7 +343,7 @@ const IntentView: React.FC<IntentViewProps> = ({
   }, []);
 
   return (
-    <Wrapper>
+    <Wrapper $display={$display}>
       <Content>
         <Title>Destination</Title>
         <ChainDetails>

@@ -2,6 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { VIDEO_LINKS } from "../utils/assetList";
 
+const MainContainer = styled.div<{ $display: boolean }>`
+  display: ${({ $display }) => ($display ? "block" : "none")};
+`;
+
 const Title = styled.h2`
   font-family: "Nohami", sans-serif;
   font-size: 1.75rem;
@@ -45,9 +49,10 @@ const Video = styled.video`
 const ErrorBox: React.FC<{
   message: string;
   close: () => void;
-}> = ({ message, close }) => {
+  $display: boolean;
+}> = ({ message, close, $display }) => {
   return (
-    <>
+    <MainContainer $display={$display}>
       <Video
         src={VIDEO_LINKS["error"]}
         autoPlay
@@ -58,7 +63,7 @@ const ErrorBox: React.FC<{
       <Title>Oops!</Title>
       <Description>{message}</Description>
       <Button onClick={close}>Close</Button>
-    </>
+    </MainContainer>
   );
 };
 

@@ -14,7 +14,7 @@ import CopySVG from "./shared/Copy";
 
 const Container = styled.div<{ $display: boolean }>`
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
   display: ${({ $display }) => ($display ? "block" : "none")};
 `;
 
@@ -247,7 +247,7 @@ const Root = styled(Accordion.Root)`
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
-  padding: 0.35rem;
+  padding: 1rem;
 `;
 
 const CurrencySmall = styled.span`
@@ -372,7 +372,6 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
   const { address } = useAccount();
   const { isDarkMode } = useTheme();
   const { balances } = useUnifiedBalance();
-  console.log("unifiedBalanceComponent", balances);
 
   const getBreakdownImageArray = (breakdown: UserAsset["breakdown"]) => {
     const length = breakdown.length;
