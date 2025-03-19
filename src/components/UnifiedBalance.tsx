@@ -11,11 +11,11 @@ import type { UserAsset } from "@arcana/ca-sdk";
 import { useUnifiedBalance } from "../hooks/useUnifiedBalance";
 import { useAccount } from "wagmi";
 import CopySVG from "./shared/Copy";
+import { MainContainerBase } from "./shared/Container";
 
-const Container = styled.div<{ $display: boolean }>`
+const MainContainer = styled(MainContainerBase)`
   margin: 0 auto;
   padding: 10px;
-  display: ${({ $display }) => ($display ? "block" : "none")};
 `;
 
 const Header = styled.div`
@@ -395,7 +395,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
     return <></>;
   }
   return (
-    <Container $display={$display}>
+    <MainContainer $display={$display}>
       <Header>
         <Title>Unified Balance</Title>
         <CloseIcon onClick={close}>
@@ -543,7 +543,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
             ))}
         </Root>
       </BreakdownCard>
-    </Container>
+    </MainContainer>
   );
 };
 

@@ -46,6 +46,10 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
             >
               <>
                 <Modal isopen={currentStep !== "none"}>
+                  <AllowanceSetup
+                    $display={currentStep === "allowance"}
+                    sources={allowanceP.current.sources}
+                  />
                   <IntentView
                     $display={currentStep === "intent"}
                     intent={intentP.current.intent}
@@ -57,10 +61,6 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
                     intentSteps={steps}
                     $display={currentStep === "progression"}
                     close={() => setCurrentStep("none")}
-                  />
-                  <AllowanceSetup
-                    $display={currentStep === "allowance"}
-                    sources={allowanceP.current.sources}
                   />
                   <UnifiedBalance
                     $display={currentStep === "ub"}

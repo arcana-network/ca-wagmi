@@ -1,8 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-import NohemiBold from "../assets/fonts/nohemi/Nohemi-Bold.woff2";
-import NohemiSemiBold from "../assets/fonts/nohemi/Nohemi-SemiBold.woff2";
-import NohemiMedium from "../assets/fonts/nohemi/Nohemi-Medium.woff2";
-import NohemiRegular from "../assets/fonts/nohemi/Nohemi-Regular.woff2";
 
 const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
@@ -39,6 +35,24 @@ body {
   to {
     opacity: 0;
     height: 0;
+  }
+}
+
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut{
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 

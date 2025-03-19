@@ -1,53 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import styled from "styled-components";
 import Loader from "./shared/Loader";
+import { MainContainerBase } from "./shared/Container";
 import { VIDEO_LINKS, IMAGE_LINKS } from "../utils/assetList";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
 import { useTheme } from "./ThemeProvider";
 import type { onAllowanceHookSource } from "@arcana/ca-sdk";
 
-const MainContainer = styled.div<{ $display: boolean }>`
-  display: ${({ $display }) => ($display ? "block" : "none")};
-`;
+const MainContainer = styled(MainContainerBase)``;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
   width: 100%;
-`;
-
-const Title = styled.h2`
-  font-family: "Nohami", sans-serif;
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin: 0 0 10px;
-  color: ${({ theme }) => theme.primaryColor};
-  text-align: center;
-`;
-
-const Description = styled.p`
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0 0 10px;
-  color: ${({ theme }) => theme.primaryTitleColor};
-  text-align: center;
-`;
-
-const Button = styled.button`
-  margin-top: 20px;
-  padding: 15px 20px;
-  width: 100%;
-  background: ${({ theme }) => theme.primaryColor};
-  color: ${({ theme }) => theme.buttonTextColor};
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: background 0.3s ease;
 `;
 
 const Video = styled.video`
@@ -61,6 +27,7 @@ const BigLoaderWrap = styled.div`
   width: 5rem;
   margin: 1rem auto;
 `;
+
 const LoaderWrap = styled.div`
   width: 2rem;
   animation: fadeIn 0.5s;
@@ -120,17 +87,6 @@ const StyledCheckboxControl = styled(CheckboxControl)<{ checked: boolean }>`
   transition: all 0.3s;
 `;
 
-// const Step = styled.div<{ isDarkMode: boolean }>`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   font-family: "Inter", sans-serif;
-//   font-weight: 500;
-//   font-size: 0.875rem;
-//   color: ${({ isDarkMode, theme }) =>
-//     isDarkMode ? theme.secondaryTitleColor : theme.primaryTitleColor};
-// `;
-
 const SectionWrap = styled.div`
   display: flex;
   justify-content: space-between;
@@ -188,15 +144,10 @@ const ChainName = styled.div`
   color: ${({ theme }) => theme.secondaryTitleColor};
 `;
 
-interface IntentComponentProps {
+const AllowanceSetup: React.FC<{
   sources: Array<onAllowanceHookSource & { done: boolean }>;
   $display: boolean;
-}
-
-const AllowanceSetup: React.FC<IntentComponentProps> = ({
-  sources,
-  $display,
-}) => {
+}> = ({ sources, $display }) => {
   const { isDarkMode } = useTheme();
 
   const incompleteStep = sources.findIndex((s) => s.done === false);

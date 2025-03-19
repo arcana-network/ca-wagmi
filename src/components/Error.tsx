@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { VIDEO_LINKS } from "../utils/assetList";
+import { MainContainerBase } from "./shared/Container";
 
-const MainContainer = styled.div<{ $display: boolean }>`
-  display: ${({ $display }) => ($display ? "block" : "none")};
-`;
+const MainContainer = styled(MainContainerBase)``;
 
 const Title = styled.h2`
   font-family: "Nohami", sans-serif;

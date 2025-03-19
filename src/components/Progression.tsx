@@ -4,51 +4,16 @@ import Loader from "./shared/Loader";
 import { VIDEO_LINKS, IMAGE_LINKS } from "../utils/assetList";
 import { getTextFromStep } from "../utils/getTextFromSteps";
 import { Checkbox, CheckboxControl, CheckboxLabel } from "@ark-ui/react";
-import { useTheme } from "./ThemeProvider";
 import type { ProgressStep } from "@arcana/ca-sdk";
+import { MainContainerBase } from "./shared/Container";
 
-const MainContainer = styled.div<{ $display: boolean }>`
-  display: ${({ $display }) => ($display ? "block" : "none")};
-`;
+const MainContainer = styled(MainContainerBase)``;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
   width: 100%;
-`;
-
-const Title = styled.h2`
-  font-family: "Nohami", sans-serif;
-  font-size: 1.75rem;
-  font-weight: 600;
-  margin: 0 0 10px;
-  color: ${({ theme }) => theme.primaryColor};
-  text-align: center;
-`;
-
-const Description = styled.p`
-  font-family: "Inter", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0 0 10px;
-  color: ${({ theme }) => theme.primaryTitleColor};
-  text-align: center;
-`;
-
-const Button = styled.button`
-  margin-top: 20px;
-  padding: 15px 20px;
-  width: 100%;
-  background: ${({ theme }) => theme.primaryColor};
-  color: ${({ theme }) => theme.buttonTextColor};
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-family: "Inter", sans-serif;
-  font-size: 0.875rem;
-  font-weight: 600;
-  transition: background 0.3s ease;
 `;
 
 const Video = styled.video`
@@ -68,18 +33,6 @@ const LoaderWrap = styled.div`
   width: 2rem;
   animation: fadeIn 0.5s;
 `;
-
-// const SectionTitle = styled.div<{ isDarkMode: boolean }>`
-//   display: flex;
-//   justify-content: start;
-//   font-family: "Inter", sans-serif;
-//   font-size: 1rem;
-//   font-weight: 700;
-//   color: ${({ isDarkMode, theme }) =>
-//     isDarkMode ? theme.secondaryTitleColor : theme.primaryTitleColor};
-//   margin: 6px 0px;
-//   margin-top: 25px;
-// `;
 
 const StyledCheckbox = styled.div`
   display: flex;
@@ -117,17 +70,6 @@ const LinkContainer = styled.div`
   width: 100%;
   transition: all 0.3s;
 `;
-
-// const Step = styled.div<{ isDarkMode: boolean }>`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   font-family: "Inter", sans-serif;
-//   font-weight: 500;
-//   font-size: 0.875rem;
-//   color: ${({ isDarkMode, theme }) =>
-//     isDarkMode ? theme.secondaryTitleColor : theme.primaryTitleColor};
-// `;
 
 const StyledLink = styled.a`
   display: flex;

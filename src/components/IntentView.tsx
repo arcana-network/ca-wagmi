@@ -3,16 +3,15 @@ import styled from "styled-components";
 import { Accordion } from "@ark-ui/react";
 import { getCoinbasePrices } from "../utils/coinbase";
 import AppTooltip from "./shared/Tooltip";
+import { MainContainerBase } from "./shared/Container";
 import { IMAGE_LINKS } from "../utils/assetList";
 import { getReadableNumber } from "../utils/commonFunction";
+import type { Intent } from "@arcana/ca-sdk";
 import Decimal from "decimal.js";
 
-const Wrapper = styled.div<{ $display: boolean }>`
-  display: flex;
-  flex-direction: column;
+const MainContainer = styled(MainContainerBase)`
   padding-top: 1.5rem;
   gap: 1rem;
-  display: ${({ $display }) => ($display ? "block" : "none")};
 `;
 
 const Root = styled(Accordion.Root)`
@@ -86,13 +85,6 @@ const TotalAtDestinationValue = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.primaryTitleColor};
 `;
-
-// const USDValue = styled.span`
-//   font-family: "Inter", sans-serif;
-//   font-size: 0.75rem;
-//   font-weight: 500;
-//   color: ${({ theme }) => theme.primaryTitleColor};
-// `;
 
 const ViewBreakupButton = styled(Accordion.ItemTrigger)`
   display: flex;
@@ -277,51 +269,13 @@ const Button = styled.button<{ variant?: "primary" | "secondary" }>`
   }
 `;
 
-type ReadableIntent = {
-  sourcesTotal: string;
-  destination: {
-    chainID: number;
-    chainLogo: string | undefined;
-    amount: string;
-    chainName: string;
-  };
-  sources: {
-    chainID: number;
-    chainLogo: string | undefined;
-    chainName: string;
-    amount: string;
-    contractAddress: `0x${string}`;
-  }[];
-  fees: {
-    gasSupplied: string;
-    protocol: string;
-    caGas: string;
-    solver: string;
-    total: string;
-  };
-  token: {
-    symbol: string;
-    decimals: number;
-    name: string;
-    logo: string | undefined;
-  };
-};
-
-interface IntentViewProps {
-  intent?: ReadableIntent;
+const IntentView: React.FC<{
+  intent?: Intent;
   deny: () => void;
   allow: () => void;
   intentRefreshing: boolean;
   $display: boolean;
-}
-
-const IntentView: React.FC<IntentViewProps> = ({
-  allow,
-  deny,
-  intent,
-  intentRefreshing,
-  $display,
-}) => {
+}> = ({ allow, deny, intent, intentRefreshing, $display }) => {
   if (!intent) {
     return <></>;
   }
@@ -343,7 +297,7 @@ const IntentView: React.FC<IntentViewProps> = ({
   }, []);
 
   return (
-    <Wrapper $display={$display}>
+    <MainContainer $display={$display}>
       <Content>
         <Title>Destination</Title>
         <ChainDetails>
@@ -588,7 +542,7 @@ const IntentView: React.FC<IntentViewProps> = ({
           {intentRefreshing ? "Refreshing" : "Confirm"}
         </Button>
       </ButtonWrap>
-    </Wrapper>
+    </MainContainer>
   );
 };
 
