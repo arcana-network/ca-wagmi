@@ -5,7 +5,6 @@ import Modal from "./components/shared/Modal";
 import ThemeProvider from "./components/ThemeProvider";
 import Progress from "./components/Progression";
 import AllowanceSetup from "./components/AllowanceSetup";
-import EmptyLoader from "./components/EmptyLoader";
 import UnifiedBalance from "./components/UnifiedBalance";
 import GlobalStyles from "./components/GlobalStyles";
 import ErrorBox from "./components/Error";

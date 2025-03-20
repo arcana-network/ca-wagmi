@@ -39,7 +39,7 @@ const StyledCheckbox = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
   border-radius: 12px;
   margin: 6px 0px;
 `;
@@ -60,7 +60,7 @@ const StyledCheckboxControl = styled(CheckboxControl)<{ checked: boolean }>`
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 `;
 
 const LinkContainer = styled.div`
@@ -68,7 +68,7 @@ const LinkContainer = styled.div`
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 `;
 
 const StyledLink = styled.a`
@@ -87,12 +87,6 @@ const StyledLink = styled.a`
   }
 `;
 
-interface IntentComponentProps {
-  intentSteps: Array<ProgressStep & { done: boolean }>;
-  $display: boolean;
-  close: () => void;
-}
-
 const stepList = [
   "INTENT_SUBMITTED",
   "INTENT_COLLECTION_COMPLETE",
@@ -100,11 +94,11 @@ const stepList = [
   "INTENT_FULFILLED",
 ];
 
-const Progress: React.FC<IntentComponentProps> = ({
-  intentSteps,
-  $display,
-  close,
-}) => {
+const Progress: React.FC<{
+  intentSteps: Array<ProgressStep & { done: boolean }>;
+  $display: boolean;
+  close: () => void;
+}> = ({ intentSteps, $display, close }) => {
   const steps = intentSteps.filter((s) => stepList.includes(s.type));
   const incompleteStep = steps.findIndex((s) => s.done === false);
   const currentStep = incompleteStep === -1 ? steps.length : incompleteStep + 1;
@@ -122,7 +116,7 @@ const Progress: React.FC<IntentComponentProps> = ({
         close();
       }, 1000);
     }
-  }, [inProgressState, close]);
+  }, [inProgressState]);
 
   return (
     <MainContainer $display={$display}>

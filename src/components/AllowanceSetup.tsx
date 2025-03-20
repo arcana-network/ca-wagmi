@@ -48,7 +48,7 @@ const StyledCheckbox = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
   border-radius: 12px;
   margin: 6px 0px;
 `;
@@ -84,7 +84,7 @@ const StyledCheckboxControl = styled(CheckboxControl)<{ checked: boolean }>`
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
 `;
 
 const SectionWrap = styled.div`

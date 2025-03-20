@@ -7,6 +7,10 @@ const GlobalStyles = createGlobalStyle`
 @import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Regular-DUcMLV9rm0J6Vz2aeEP00pefAyzt1S.woff2');
 @import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-SemiBold-g6evWhJlyeIsTotRjBBANMIb3MjbMG.woff2');
 
+:root {
+  interpolate-size: allow-keywords;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
@@ -69,7 +73,7 @@ body {
 [data-scope='select'][data-part='indicator'],
 [data-scope='accordion'][data-part='item-indicator'],
 [data-scope='menu'][data-part='indicator'] {
-  transition: all 300ms ease;
+  transition: transform 300ms ease;
 }
 
 [data-scope='combobox'][data-part='trigger'][data-state='open'],

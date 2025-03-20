@@ -42,8 +42,7 @@ const slideOut = keyframes`
 `;
 
 const ModalOverlay = styled.div<{ $isopen: boolean }>`
-  display: ${({ $isopen }) => ($isopen ? "block" : "none")};
-  position: fixed;
+  display: ${({ $isopen }) => ($isopen ? "flex" : "none")};
   top: 0;
   left: 0;
   width: 100%;
@@ -51,13 +50,12 @@ const ModalOverlay = styled.div<{ $isopen: boolean }>`
   background: ${({ theme }) => theme.backgroundOverlyColor};
   animation: ${({ $isopen }) => ($isopen ? fadeIn : fadeOut)} 0.3s ease-out;
   z-index: 2147483645;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
 `;
 
 const ModalContainer = styled.div<{ $isopen: boolean }>`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background: ${({ theme }) => theme.modalBackground};
   border: ${({ theme }) => `1px solid ${theme.backgroundColor}`};
   padding: 20px;
@@ -67,7 +65,7 @@ const ModalContainer = styled.div<{ $isopen: boolean }>`
   max-width: 400px;
   text-align: center;
   z-index: 2147483646;
-  animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
+  overflow: hidden;
 `;
 
 const Footer = styled.footer`

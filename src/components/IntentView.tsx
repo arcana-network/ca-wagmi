@@ -9,11 +9,7 @@ import { getReadableNumber } from "../utils/commonFunction";
 import type { Intent } from "@arcana/ca-sdk";
 import Decimal from "decimal.js";
 
-const MainContainer = styled(MainContainerBase)`
-  padding-top: 1.5rem;
-  gap: 1rem;
-`;
-
+const MainContainer = styled(MainContainerBase)``;
 const Root = styled(Accordion.Root)`
   display: flex;
   flex-direction: column;
@@ -276,9 +272,6 @@ const IntentView: React.FC<{
   intentRefreshing: boolean;
   $display: boolean;
 }> = ({ allow, deny, intent, intentRefreshing, $display }) => {
-  if (!intent) {
-    return <></>;
-  }
   const [rates, setRates] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -295,6 +288,10 @@ const IntentView: React.FC<{
 
     return () => clearInterval(interval);
   }, []);
+
+  if (!intent) {
+    return <></>;
+  }
 
   return (
     <MainContainer $display={$display}>

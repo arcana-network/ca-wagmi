@@ -57,7 +57,6 @@ const useCAInternal = (ca: CA) => {
       clearAsyncInterval(intentP.current.intervalHandler);
       intentP.current.intervalHandler = null;
     }
-    setCurrentStep("none");
     intentP.current.deny();
   };
 
@@ -96,7 +95,6 @@ const useCAInternal = (ca: CA) => {
       });
 
       ca.caEvents.addListener("expected_steps", (data: ProgressSteps) => {
-        setCurrentStep("progression");
         setSteps(data.map((d) => ({ ...d, done: false })));
       });
 
