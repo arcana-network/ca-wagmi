@@ -21,22 +21,22 @@ const fadeOut = keyframes`
 
 const slideIn = keyframes`
   from {
-    transform: translate(-50%, -60%);
+    transform: translateY(-20%);
     opacity: 0;
   }
   to {
-    transform: translate(-50%, -50%);
+    transform: translateY(0%);
     opacity: 1;
   }
 `;
 
 const slideOut = keyframes`
   from {
-    transform: translate(-50%, -50%);
+    transform: translateY(0%);
     opacity: 1;
   }
   to {
-    transform: translate(-50%, -60%);
+    transform: translateY(-20%);
     opacity: 0;
   }
 `;
@@ -66,6 +66,7 @@ const ModalContainer = styled.div<{ $isopen: boolean }>`
   text-align: center;
   z-index: 2147483646;
   overflow: hidden;
+  animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
 `;
 
 const Footer = styled.footer`
