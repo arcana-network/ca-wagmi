@@ -1,4 +1,6 @@
-# CA PnP for wagmi
+# Chain Abstraction (Wagmi PnP)
+
+The Arcana `ca-wagmi` SDK simplifies Web3 apps built with the Wagmi library by providing a unified balance across blockchains through an easy-to-use `useBalance` modal. It also replaces the `useSendTransaction` and `useWriteContract` hooks to support chain-abstracted transactions. 
 
 ## Quick start
 
