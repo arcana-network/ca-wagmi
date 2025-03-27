@@ -68,7 +68,7 @@ import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 // Replaces `wagmi` hook: `useSendTransaction`
 const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
 
-// has same API as wagmi `useWriteContract` and `useWriteContractAsync`
+// Replaces `wagmi` hook: `useWriteContract`
 const { writeContract, writeContractAsync } = useWriteContract() 
 ```
 
