@@ -65,7 +65,7 @@ Following Wagmi hooks have been replaced by the Arcana `ca-wagmi` SDK to ensure 
 ```ts
 import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
 
-// has same API as wagmi `useSendTransaction` and `useSendTransactionAsync`
+// Replaces `wagmi` hook: `useSendTransaction`
 const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
 
 // has same API as wagmi `useWriteContract` and `useWriteContractAsync`
