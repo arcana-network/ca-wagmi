@@ -1,17 +1,11 @@
-import React from "react";
 import styled from "styled-components";
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: ${({ theme }) => theme.backgroundColor};
-  color: ${({ theme }) => theme.primaryColor};
-  transition: all 0.3s ease;
+
+const MainContainer = styled.div<{ $display: boolean }>`
+  display: block;
+  overflow: hidden;
+  visibility: ${({ $display }) => ($display ? "visible" : "hidden")};
+  height: ${({ $display }) => ($display ? "auto" : "0")};
+  transition: height 300ms ease;
 `;
 
-const c = ({ children }: { children: React.ReactNode }) => {
-  return <Container>{children}</Container>;
-};
-
-export default c;
+export { MainContainer as MainContainerBase };

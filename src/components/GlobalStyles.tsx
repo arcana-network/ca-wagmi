@@ -1,40 +1,15 @@
 import { createGlobalStyle } from "styled-components";
-import NohemiBold from "../assets/fonts/nohemi/Nohemi-Bold.woff2";
-import NohemiSemiBold from "../assets/fonts/nohemi/Nohemi-SemiBold.woff2";
-import NohemiMedium from "../assets/fonts/nohemi/Nohemi-Medium.woff2";
-import NohemiRegular from "../assets/fonts/nohemi/Nohemi-Regular.woff2";
 
 const GlobalStyles = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Bold-WZIeKJtIWPKPZmx4INENIkapoXPehJ.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Medium-pBShVkTxu1a7zL7t9s8kSy3CtBtVHH.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-Regular-DUcMLV9rm0J6Vz2aeEP00pefAyzt1S.woff2');
+@import url('https://38k1k1qleotl9tja.public.blob.vercel-storage.com/Nohemi-SemiBold-g6evWhJlyeIsTotRjBBANMIb3MjbMG.woff2');
 
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 700;
-  src: url(${NohemiBold});
+:root {
+  interpolate-size: allow-keywords;
 }
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 600;
-  src: url(${NohemiSemiBold});
-}
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 500;
-  src: url(${NohemiMedium});
-}
-
-@font-face {
-  font-family: Nohemi;
-  font-style: normal;
-  font-weight: 400;
-  src: url(${NohemiRegular});
-}
-
 
 body {
     font-family: 'Inter', sans-serif;
@@ -67,6 +42,24 @@ body {
   }
 }
 
+@keyframes fadeIn{
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut{
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 [data-part='item-content'][data-state='open'] {
   animation: accordionSlideDown 300ms ease-in-out;
 }
@@ -80,7 +73,7 @@ body {
 [data-scope='select'][data-part='indicator'],
 [data-scope='accordion'][data-part='item-indicator'],
 [data-scope='menu'][data-part='indicator'] {
-  transition: all 300ms ease;
+  transition: transform 300ms ease;
 }
 
 [data-scope='combobox'][data-part='trigger'][data-state='open'],

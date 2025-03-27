@@ -17,14 +17,50 @@ function useWriteContract<
   parameters: UseWriteContractParameters<config, context> = {}
 ): UseWriteContractReturnType<config, context> {
   const wcr = internalUseWriteContract(parameters);
-  const originalWC = wcr.writeContract;
-  const { ca } = useCA();
+  const { ca, ready } = useCA();
   const { setError } = useContext(CAErrorContext);
 
-  const writeContract: typeof originalWC = (variables, options?) => {
-    if (ca) {
+  const originalWriteContract = wcr.writeContract;
+  const originalWriteContractAsync = wcr.writeContractAsync;
+
+  const writeContractAsync: typeof originalWriteContractAsync = async (
+    variables,
+    options?
+  ): Promise<`0x${string}`> => {
+    if (ca && ready) {
       const data = encodeFunctionData(
-        variables as Parameters<typeof originalWC>[0]
+        variables as Parameters<typeof originalWriteContractAsync>[0]
+      );
+      try {
+        await ca.preprocess({
+          to: variables.address,
+          data: data,
+          value:
+            typeof variables.value === "bigint"
+              ? `0x${variables.value.toString(16)}`
+              : undefined,
+        });
+        return await originalWriteContractAsync(variables, options);
+      } catch (e: any) {
+        setError(e.message);
+        if (options?.onError) {
+          options.onError(
+            e,
+            variables as Parameters<typeof options.onError>[1],
+            wcr.context
+          );
+        }
+        throw e;
+      }
+    } else {
+      return await originalWriteContractAsync(variables, options);
+    }
+  };
+
+  const writeContract: typeof originalWriteContract = (variables, options?) => {
+    if (ca && ready) {
+      const data = encodeFunctionData(
+        variables as Parameters<typeof originalWriteContract>[0]
       );
 
       ca.preprocess({
@@ -36,7 +72,7 @@ function useWriteContract<
             : undefined,
       })
         .then(() => {
-          return originalWC(variables, options);
+          return originalWriteContract(variables, options);
         })
         .catch((e) => {
           setError(e.message);
@@ -50,11 +86,12 @@ function useWriteContract<
         });
       return;
     } else {
-      return originalWC(variables, options);
+      return originalWriteContract(variables, options);
     }
   };
 
   wcr.writeContract = writeContract;
+  wcr.writeContractAsync = writeContractAsync;
   return wcr;
 }
 

@@ -57,7 +57,6 @@ const useCAInternal = (ca: CA) => {
       clearAsyncInterval(intentP.current.intervalHandler);
       intentP.current.intervalHandler = null;
     }
-    setCurrentStep("none");
     intentP.current.deny();
   };
 
@@ -91,12 +90,11 @@ const useCAInternal = (ca: CA) => {
         }));
         allowanceP.current.allow = allow;
         allowanceP.current.deny = deny;
-        setCurrentStep("allowance");
         allowanceP.current.allow(sources.map((s) => "max"));
+        setCurrentStep("allowance");
       });
 
       ca.caEvents.addListener("expected_steps", (data: ProgressSteps) => {
-        setCurrentStep("progression");
         setSteps(data.map((d) => ({ ...d, done: false })));
       });
 
@@ -151,10 +149,14 @@ const useProvideCA = (ca: CA) => {
   const [ready, setReady] = useState(false);
   useAccountEffect({
     async onConnect({ connector }) {
-      const p = await connector.getProvider();
-      ca.setEVMProvider(p as any);
-      await ca.init();
-      setReady(true);
+      try {
+        const p = await connector.getProvider();
+        ca.setEVMProvider(p as any);
+        await ca.init();
+        setReady(true);
+      } catch (e) {
+        console.log("ca did not connect. err = ", e);
+      }
     },
     onDisconnect() {
       ca.deinit();

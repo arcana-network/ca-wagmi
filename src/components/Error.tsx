@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import Error from "../assets/videos/Error.webm";
+import { VIDEO_LINKS } from "../utils/assetList";
+import { MainContainerBase } from "./shared/Container";
+
+const MainContainer = styled(MainContainerBase)``;
 
 const Title = styled.h2`
   font-family: "Nohami", sans-serif;
@@ -45,11 +48,12 @@ const Video = styled.video`
 const ErrorBox: React.FC<{
   message: string;
   close: () => void;
-}> = ({ message, close }) => {
+  $display: boolean;
+}> = ({ message, close, $display }) => {
   return (
-    <>
+    <MainContainer $display={$display}>
       <Video
-        src={Error}
+        src={VIDEO_LINKS["error"]}
         autoPlay
         muted
         onContextMenu={(e) => e.preventDefault()}
@@ -58,7 +62,7 @@ const ErrorBox: React.FC<{
       <Title>Oops!</Title>
       <Description>{message}</Description>
       <Button onClick={close}>Close</Button>
-    </>
+    </MainContainer>
   );
 };
 

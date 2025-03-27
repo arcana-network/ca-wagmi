@@ -1,23 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import Cross from "../assets/images/Close.svg";
+import { IMAGE_LINKS } from "../utils/assetList";
 import { formatNumber, getReadableNumber } from "../utils/commonFunction";
 import { Accordion } from "@ark-ui/react";
 import AppTooltip from "./shared/Tooltip";
 import Decimal from "decimal.js";
-import Arrow from "../assets/images/ArraowDown.svg";
-import InfoIcon from "../assets/images/Info.svg";
 import { darkTheme } from "../utils/theme";
 import { useTheme } from "./ThemeProvider";
 import type { UserAsset } from "@arcana/ca-sdk";
 import { useUnifiedBalance } from "../hooks/useUnifiedBalance";
 import { useAccount } from "wagmi";
 import CopySVG from "./shared/Copy";
+import { MainContainerBase } from "./shared/Container";
 
-const Container = styled.div<{ $display: boolean }>`
+const MainContainer = styled(MainContainerBase)`
   margin: 0 auto;
-  padding: 20px;
-  display: ${({ $display }) => ($display ? "block" : "none")};
+`;
+
+const PaddingContainer = styled.div`
+  padding: 10px;
 `;
 
 const Header = styled.div`
@@ -249,7 +250,7 @@ const Root = styled(Accordion.Root)`
   flex-direction: column;
   gap: 1rem;
   overflow-y: auto;
-  padding: 0.35rem;
+  padding: 1rem;
 `;
 
 const CurrencySmall = styled.span`
@@ -374,7 +375,6 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
   const { address } = useAccount();
   const { isDarkMode } = useTheme();
   const { balances } = useUnifiedBalance();
-  console.log("unifiedBalanceComponent", balances);
 
   const getBreakdownImageArray = (breakdown: UserAsset["breakdown"]) => {
     const length = breakdown.length;
@@ -398,145 +398,159 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
     return <></>;
   }
   return (
-    <Container $display={$display}>
-      <Header>
-        <Title>Unified Balance</Title>
-        <CloseIcon onClick={close}>
-          <Img src={Cross} alt="Description Image" height={20} width={20} />
-        </CloseIcon>
-      </Header>
+    <MainContainer $display={$display}>
+      <PaddingContainer>
+        <Header>
+          <Title>Unified Balance</Title>
+          <CloseIcon onClick={close}>
+            <Img
+              src={IMAGE_LINKS["close"]}
+              alt="Description Image"
+              height={20}
+              width={20}
+            />
+          </CloseIcon>
+        </Header>
 
-      <BalanceCard>
-        <Balance>
-          <CurrencySmall>$</CurrencySmall>
-          <CurrencyLarge>{total.toString().split(".")[0]}.</CurrencyLarge>
-          <CurrencySmall>{total.toString().split(".")[1]}</CurrencySmall>
-        </Balance>
-        <AddressCard>
-          <AppTooltip message={address} $full={true}>
-            <span>{truncateMid(address!)}</span>
-          </AppTooltip>
-          <AppTooltip message="Click to copy">
-            <CopySVG address={address!} />
-          </AppTooltip>
-        </AddressCard>
-      </BalanceCard>
-      <BreakdownCard>
-        <Root collapsible>
-          {balances.length > 0 &&
-            balances.map((asset, i) => (
-              <Item value={JSON.stringify(asset.breakdown)} key={i}>
-                <Header2>
-                  <LeftContent>
-                    <TokenIconContainer>
-                      <AssetIcon src={asset.icon} alt="Logo" />
-                      {getBreakdownImageArray(asset.breakdown).map(
-                        (b, index) => (
-                          <TokenIcon
-                            key={b.chain.id}
-                            src={b.chain.logo}
-                            alt="Logo"
-                            length={asset.breakdown.length}
-                            index={index}
-                          />
-                        )
-                      )}
-                      {asset.breakdown.length > 3 && (
-                        <Badge length={asset.breakdown.length}>
-                          <BadgeText>
-                            {asset.breakdown.length > 11
-                              ? "+9"
-                              : `+${asset.breakdown.length - 2}`}
-                          </BadgeText>
-                        </Badge>
-                      )}
-                    </TokenIconContainer>
-                    <TokenInfo>
-                      <TokenWrap>
-                        <TokenSymbolTitle $isdarkmode={isDarkMode}>
-                          {asset.symbol}
-                        </TokenSymbolTitle>
-
-                        {asset.abstracted && (
-                          <AppTooltip message={message}>
-                            <ChainAbstractedContainer $isdarkmode={isDarkMode}>
-                              CA
-                              <InfoImg
-                                src={InfoIcon}
-                                alt="Info"
-                                height={10}
-                                width={10}
-                              />
-                            </ChainAbstractedContainer>
-                          </AppTooltip>
-                        )}
-                      </TokenWrap>
-
-                      <ViewBreakupButton>
-                        <span>
-                          {asset.breakdown.length} chain
-                          {asset.breakdown.length > 1 ? "s" : ""}
-                        </span>
-                        <ItemIndicator>
-                          <img src={Arrow} alt="Arrow" height={10} width={10} />
-                        </ItemIndicator>
-                      </ViewBreakupButton>
-                    </TokenInfo>
-                  </LeftContent>
-                  <TokenBalance>
-                    <AppTooltip
-                      message={`$${formatNumber(
-                        asset.balanceInFiat
-                      )} (${new Decimal(asset.balance)} ${asset.symbol})`}
-                    >
-                      <BalanceAmount>
-                        {getReadableNumber(asset.balance)}{" "}
-                        <TokenSymbol>{asset.symbol}</TokenSymbol>
-                      </BalanceAmount>
-                    </AppTooltip>
-                  </TokenBalance>
-                </Header2>
-                <ItemContent>
-                  <BreakdownContainer>
-                    {asset.breakdown.map((token, i) => (
-                      <BreakdownItem key={i}>
-                        <BreakdownToken>
-                          <RelativeContainer>
-                            <BreakdownAssetIcon src={asset.icon} alt="Logo" />
-                            <ChainLogo
-                              src={token.chain.logo}
-                              alt="Chain Logo"
+        <BalanceCard>
+          <Balance>
+            <CurrencySmall>$</CurrencySmall>
+            <CurrencyLarge>{total.toString().split(".")[0]}.</CurrencyLarge>
+            <CurrencySmall>{total.toString().split(".")[1]}</CurrencySmall>
+          </Balance>
+          <AddressCard>
+            <AppTooltip message={address} $full={true}>
+              <span>{truncateMid(address!)}</span>
+            </AppTooltip>
+            <AppTooltip message="Click to copy">
+              <CopySVG address={address!} />
+            </AppTooltip>
+          </AddressCard>
+        </BalanceCard>
+        <BreakdownCard>
+          <Root collapsible>
+            {balances.length > 0 &&
+              balances.map((asset, i) => (
+                <Item value={JSON.stringify(asset.breakdown)} key={i}>
+                  <Header2>
+                    <LeftContent>
+                      <TokenIconContainer>
+                        <AssetIcon src={asset.icon} alt="Logo" />
+                        {getBreakdownImageArray(asset.breakdown).map(
+                          (b, index) => (
+                            <TokenIcon
+                              key={b.chain.id}
+                              src={b.chain.logo}
+                              alt="Logo"
+                              length={asset.breakdown.length}
+                              index={index}
                             />
-                          </RelativeContainer>
-                          <BreakdownTokenSymbol>
+                          )
+                        )}
+                        {asset.breakdown.length > 3 && (
+                          <Badge length={asset.breakdown.length}>
+                            <BadgeText>
+                              {asset.breakdown.length > 11
+                                ? "+9"
+                                : `+${asset.breakdown.length - 2}`}
+                            </BadgeText>
+                          </Badge>
+                        )}
+                      </TokenIconContainer>
+                      <TokenInfo>
+                        <TokenWrap>
+                          <TokenSymbolTitle $isdarkmode={isDarkMode}>
                             {asset.symbol}
-                          </BreakdownTokenSymbol>
-                          <BreakDownChainSymbol $isdarkmode={isDarkMode}>
-                            {token.chain.name}
-                          </BreakDownChainSymbol>
-                        </BreakdownToken>
+                          </TokenSymbolTitle>
 
-                        <AppTooltip
-                          message={`$${formatNumber(
-                            token.balanceInFiat
-                          )} (${new Decimal(token.balance)} ${asset.symbol})`}
-                        >
-                          <BalanceAmountChainAbs>
-                            {getReadableNumber(token.balance)}{" "}
-                            <TokenSymbolChainAbs>
+                          {asset.abstracted && (
+                            <AppTooltip message={message}>
+                              <ChainAbstractedContainer
+                                $isdarkmode={isDarkMode}
+                              >
+                                CA
+                                <InfoImg
+                                  src={IMAGE_LINKS["info"]}
+                                  alt="Info"
+                                  height={10}
+                                  width={10}
+                                />
+                              </ChainAbstractedContainer>
+                            </AppTooltip>
+                          )}
+                        </TokenWrap>
+
+                        <ViewBreakupButton>
+                          <span>
+                            {asset.breakdown.length} chain
+                            {asset.breakdown.length > 1 ? "s" : ""}
+                          </span>
+                          <ItemIndicator>
+                            <img
+                              src={IMAGE_LINKS["caret"]}
+                              alt="Arrow"
+                              height={10}
+                              width={10}
+                            />
+                          </ItemIndicator>
+                        </ViewBreakupButton>
+                      </TokenInfo>
+                    </LeftContent>
+                    <TokenBalance>
+                      <AppTooltip
+                        message={`$${formatNumber(
+                          asset.balanceInFiat
+                        )} (${new Decimal(asset.balance)} ${asset.symbol})`}
+                      >
+                        <BalanceAmount>
+                          {getReadableNumber(asset.balance)}{" "}
+                          <TokenSymbol>{asset.symbol}</TokenSymbol>
+                        </BalanceAmount>
+                      </AppTooltip>
+                    </TokenBalance>
+                  </Header2>
+                  <ItemContent>
+                    <BreakdownContainer>
+                      {asset.breakdown.map((token, i) => (
+                        <BreakdownItem key={i}>
+                          <BreakdownToken>
+                            <RelativeContainer>
+                              <BreakdownAssetIcon src={asset.icon} alt="Logo" />
+                              <ChainLogo
+                                src={token.chain.logo}
+                                alt="Chain Logo"
+                              />
+                            </RelativeContainer>
+                            <BreakdownTokenSymbol>
                               {asset.symbol}
-                            </TokenSymbolChainAbs>
-                          </BalanceAmountChainAbs>
-                        </AppTooltip>
-                      </BreakdownItem>
-                    ))}
-                  </BreakdownContainer>
-                </ItemContent>
-              </Item>
-            ))}
-        </Root>
-      </BreakdownCard>
-    </Container>
+                            </BreakdownTokenSymbol>
+                            <BreakDownChainSymbol $isdarkmode={isDarkMode}>
+                              {token.chain.name}
+                            </BreakDownChainSymbol>
+                          </BreakdownToken>
+
+                          <AppTooltip
+                            message={`$${formatNumber(
+                              token.balanceInFiat
+                            )} (${new Decimal(token.balance)} ${asset.symbol})`}
+                          >
+                            <BalanceAmountChainAbs>
+                              {getReadableNumber(token.balance)}{" "}
+                              <TokenSymbolChainAbs>
+                                {asset.symbol}
+                              </TokenSymbolChainAbs>
+                            </BalanceAmountChainAbs>
+                          </AppTooltip>
+                        </BreakdownItem>
+                      ))}
+                    </BreakdownContainer>
+                  </ItemContent>
+                </Item>
+              ))}
+          </Root>
+        </BreakdownCard>
+      </PaddingContainer>
+    </MainContainer>
   );
 };
 

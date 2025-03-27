@@ -16,15 +16,53 @@ function useSendTransaction<
   parameters: UseSendTransactionParameters<config, context> = {}
 ): UseSendTransactionReturnType<config, context> {
   const r = internalUseSendTransaction(parameters);
-  const { ca } = useCA();
+  const { ca, ready } = useCA();
   const { setError } = useContext(CAErrorContext);
+
   const originalSendTx = r.sendTransaction;
+  const originalSendTxAsync = r.sendTransactionAsync;
+
+  const sendTransactionAsync = async (
+    variables: Parameters<UseSendTransactionReturnType["sendTransaction"]>[0],
+    options?: Parameters<typeof r.sendTransaction>[1]
+  ): Promise<`0x${string}`> => {
+    if (ca && ready) {
+      try {
+        await ca.preprocess({
+          to: variables.to ? variables.to : undefined,
+          data: variables.data ? variables.data : undefined,
+          value: variables.value
+            ? `0x${variables.value.toString(16)}`
+            : undefined,
+        });
+        return await originalSendTxAsync(
+          variables as Parameters<typeof r.sendTransaction>[0],
+          options
+        );
+      } catch (e: any) {
+        setError(e.message);
+        if (options?.onError) {
+          options.onError(
+            e,
+            r.variables as Parameters<typeof r.sendTransaction>[0],
+            r.context
+          );
+        }
+        throw e;
+      }
+    } else {
+      return await originalSendTxAsync(
+        variables as Parameters<typeof r.sendTransaction>[0],
+        options
+      );
+    }
+  };
 
   const sendTransaction = (
     variables: Parameters<UseSendTransactionReturnType["sendTransaction"]>[0],
     options?: Parameters<typeof r.sendTransaction>[1]
   ) => {
-    if (ca) {
+    if (ca && ready) {
       ca.preprocess({
         to: variables.to ? variables.to : undefined,
         data: variables.data ? variables.data : undefined,
@@ -57,6 +95,7 @@ function useSendTransaction<
     }
   };
   r.sendTransaction = sendTransaction;
+  r.sendTransactionAsync = sendTransactionAsync;
   return r;
 }
 
