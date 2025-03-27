@@ -81,7 +81,7 @@ export type UseBalanceReturnValue = {
 
 type UseBalanceReturn = {
   loading: boolean;
-  value: UseBalanceReturnValue | null;
+  data: UseBalanceReturnValue | null;
   error: Error | null;
 };
 
@@ -107,13 +107,13 @@ const useBalance = ({ symbol }: UseBalanceParams): UseBalanceReturn => {
     if (!val) {
       return {
         loading: false,
-        value: null,
+        data: null,
         error: new Error("asset not supported"),
       };
     }
     return {
       loading: false,
-      value: {
+      data: {
         decimals: val.decimals,
         formatted: val.balance,
         symbol: val.symbol.toUpperCase(),
@@ -133,14 +133,14 @@ const useBalance = ({ symbol }: UseBalanceParams): UseBalanceReturn => {
     return {
       loading: isPending,
       error: error,
-      value: null,
+      data: null,
     };
   }
 };
 
 type UseBalancesReturn = {
   loading: boolean;
-  value: UseBalanceReturnValue[] | null;
+  data: UseBalanceReturnValue[] | null;
   error: Error | null;
 };
 
@@ -160,33 +160,31 @@ const useBalances = (): UseBalancesReturn => {
   });
 
   if (isSuccess) {
-    const value = data.map((v) => {
-      return {
-        decimals: v.decimals,
-        formatted: v.balance,
-        symbol: v.symbol.toUpperCase(),
-        value: convertToDecimals(v.balance, v.decimals),
-        breakdown: v.breakdown.map((b) => {
-          return {
-            chain: b.chain,
-            formatted: b.balance,
-            address: b.contractAddress,
-            value: convertToDecimals(b.balance, v.decimals),
-          };
-        }),
-      };
-    });
-
     return {
       loading: false,
-      value,
+      data: data.map((v) => {
+        return {
+          decimals: v.decimals,
+          formatted: v.balance,
+          symbol: v.symbol.toUpperCase(),
+          value: convertToDecimals(v.balance, v.decimals),
+          breakdown: v.breakdown.map((b) => {
+            return {
+              chain: b.chain,
+              formatted: b.balance,
+              address: b.contractAddress,
+              value: convertToDecimals(b.balance, v.decimals),
+            };
+          }),
+        };
+      }),
       error: null,
     };
   } else {
     return {
       loading: isPending,
       error: error,
-      value: null,
+      data: null,
     };
   }
 };

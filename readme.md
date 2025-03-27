@@ -104,7 +104,7 @@ const balance = useBalance({ symbol: "eth" })
 | Field | Type |
 | :-----| :--- |
 | loading | `boolean` |
-| value | `{ symbol: string, decimals: number, formatted: string, value: bigint} \| null` |
+| data | `{ symbol: string, decimals: number, formatted: string, value: bigint} \| null` |
 | error | `Error \| null` |
 
 **Sample Response**
@@ -112,7 +112,7 @@ const balance = useBalance({ symbol: "eth" })
 ```js
 {
     loading: false,
-    value: {
+    data: {
       symbol: "ETH",
       decimals: 18,
       formatted: "0.000785657313049966"
@@ -142,7 +142,7 @@ const balances = useBalances()
 | Parameter | Type |
 | :-------- | :--- |
 | loading   | `boolean` |
-| value     | `UseBalanceValue[] \| null` |
+| data      | `UseBalanceValue[] \| null` |
 | error     | `Error \| null` |
 
 **Sample Response**
@@ -150,7 +150,7 @@ const balances = useBalances()
 ```js
 {
   loading: false,
-  value: [{
+  data: [{
     symbol: "ETH",
     decimals: 18,
     formatted: "0.000785657313049966"
