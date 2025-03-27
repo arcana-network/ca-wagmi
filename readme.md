@@ -139,38 +139,36 @@ const balances = useBalances()
 
 ##### Response
 
-> | Parameter   |           Type              |
-> |-------------|-----------------------------|
-> | loading     |         `boolean`           |
-> | value       | `UseBalanceValue[] \| null` |
-> | error       |       `Error \| null`       |
+| Parameter | Type |
+| :-------- | :--- |
+| loading   | `boolean` |
+| value     | `UseBalanceValue[] \| null` |
+| error     | `Error \| null` |
 
 **Sample Response**
 
-> ```js
-> {
->   loading: false,
->   value: [{
->     symbol: "ETH",
->     decimals: 18,
->     formatted: "0.000785657313049966"
->     value: 785657313049966n,
->     breakdown: [
->       {
->         chain: {
->           id: 1,
->           name: "Ethereum",
->           logo: "..."
->         },
->         formatted: "0.000785657313049966",
->         address: "0x0000000000000000000000000000000000000000",
->         value: 785657313049966n
->       }
->     ]
->   }],
->   error: null
-> } 
-> ```
+```js
+{
+  loading: false,
+  value: [{
+    symbol: "ETH",
+    decimals: 18,
+    formatted: "0.000785657313049966"
+    value: 785657313049966n,
+    breakdown: [{
+      chain: {
+        id: 1,
+        name: "Ethereum",
+        logo: "..."
+      },
+      formatted: "0.000785657313049966",
+      address: "0x0000000000000000000000000000000000000000",
+      value: 785657313049966n
+    }]
+  }],
+  error: null
+} 
+```
 
 #### useBalanceModal
 <hr>
