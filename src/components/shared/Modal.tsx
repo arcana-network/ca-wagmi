@@ -70,7 +70,6 @@ const ModalContainer = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   text-align: center;
   overflow: hidden;
   animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
-  z-index: 2147483646;
   ${({ $alwaysOnTop }) =>
     $alwaysOnTop &&
     css`
