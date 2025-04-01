@@ -14,9 +14,14 @@ import Decimal from "decimal.js";
 
 Decimal.set({ toExpNeg: -18 });
 
-const provider = getCA();
-
-export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
+export const CAProvider = ({
+  children,
+  network,
+}: {
+  network?: "testnet" | "dev";
+  children?: React.ReactNode;
+}) => {
+  const provider = getCA(network);
   const { ca, ready } = useProvideCA(provider);
   const {
     steps,
@@ -44,7 +49,10 @@ export const CAProvider = ({ children }: { children?: React.ReactNode }) => {
               }}
             >
               <>
-                <Modal isopen={currentStep !== "none"}>
+                <Modal
+                  alwaysOnTop={currentStep !== "progression"}
+                  isopen={currentStep !== "none"}
+                >
                   <AllowanceSetup
                     $display={currentStep === "allowance"}
                     sources={allowanceP.current.sources}

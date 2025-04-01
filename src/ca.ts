@@ -1,5 +1,10 @@
 import { CA } from "@arcana/ca-sdk";
 
-const ca = new CA();
+let ca: CA | null = null;
 
-export const getCA = () => ca;
+export const getCA = (network: "testnet" | "dev" = "testnet") => {
+  if (!ca) {
+    ca = new CA({ network });
+  }
+  return ca;
+};

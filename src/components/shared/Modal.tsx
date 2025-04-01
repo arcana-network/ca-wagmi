@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { IMAGE_LINKS } from "../../utils/assetList";
 const fadeIn = keyframes`
   from {
@@ -41,7 +41,7 @@ const slideOut = keyframes`
   }
 `;
 
-const ModalOverlay = styled.div<{ $isopen: boolean }>`
+const ModalOverlay = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   display: ${({ $isopen }) => ($isopen ? "flex" : "none")};
   top: 0;
   left: 0;
@@ -49,13 +49,17 @@ const ModalOverlay = styled.div<{ $isopen: boolean }>`
   height: 100%;
   background: ${({ theme }) => theme.backgroundOverlyColor};
   animation: ${({ $isopen }) => ($isopen ? fadeIn : fadeOut)} 0.3s ease-out;
-  z-index: 2147483645;
   justify-content: center;
   align-items: center;
   position: fixed;
+  ${({ $alwaysOnTop }) =>
+    $alwaysOnTop &&
+    css`
+      z-index: 2147483645;
+    `}
 `;
 
-const ModalContainer = styled.div<{ $isopen: boolean }>`
+const ModalContainer = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   background: ${({ theme }) => theme.modalBackground};
   border: ${({ theme }) => `1px solid ${theme.backgroundColor}`};
   padding: 20px;
@@ -64,9 +68,13 @@ const ModalContainer = styled.div<{ $isopen: boolean }>`
   width: 90%;
   max-width: 400px;
   text-align: center;
-  z-index: 2147483646;
   overflow: hidden;
   animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
+  ${({ $alwaysOnTop }) =>
+    $alwaysOnTop &&
+    css`
+      z-index: 2147483646;
+    `}
 `;
 
 const Footer = styled.footer`
@@ -88,13 +96,14 @@ const Img = styled.img`
 
 interface ModalProps {
   isopen: boolean;
+  alwaysOnTop: boolean;
   children: ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isopen, children }) => {
+const Modal: React.FC<ModalProps> = ({ isopen, alwaysOnTop, children }) => {
   return (
-    <ModalOverlay $isopen={isopen}>
-      <ModalContainer $isopen={isopen}>
+    <ModalOverlay $alwaysOnTop={alwaysOnTop} $isopen={isopen}>
+      <ModalContainer $alwaysOnTop={alwaysOnTop} $isopen={isopen}>
         {children}
         <Footer>
           Powered by
