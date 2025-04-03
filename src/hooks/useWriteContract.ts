@@ -5,7 +5,7 @@ import {
   UseWriteContractParameters,
   UseWriteContractReturnType,
 } from "wagmi";
-import { encodeFunctionData } from "viem";
+import { BaseError, encodeFunctionData, WriteContractErrorType } from "viem";
 import { useCA } from "./useCA";
 import { useContext } from "react";
 import { CAErrorContext } from "../context";
@@ -41,11 +41,15 @@ function useWriteContract<
               : undefined,
         });
         return await originalWriteContractAsync(variables, options);
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e) {
+        if (e instanceof BaseError) {
+          setError(e.shortMessage);
+        } else if (e instanceof Error) {
+          setError(e.message);
+        }
         if (options?.onError) {
           options.onError(
-            e,
+            e as WriteContractErrorType,
             variables as Parameters<typeof options.onError>[1],
             wcr.context
           );
@@ -75,7 +79,11 @@ function useWriteContract<
           return originalWriteContract(variables, options);
         })
         .catch((e) => {
-          setError(e.message);
+          if (e instanceof BaseError) {
+            setError(e.shortMessage);
+          } else if (e instanceof Error) {
+            setError(e.message);
+          }
           if (options?.onError) {
             options.onError(
               e,
