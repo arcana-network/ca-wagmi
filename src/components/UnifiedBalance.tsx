@@ -37,8 +37,9 @@ const Title = styled.h1`
   flex: 1;
 `;
 
-const CloseIcon = styled.span`
+const CloseIcon = styled.div`
   cursor: pointer;
+  padding: 0.75rem;
 `;
 
 const Img = styled.img`
@@ -382,7 +383,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
     return [...breakdown].slice(0, spliceLength);
   };
 
-  const [total, setTotal] = React.useState(0);
+  const [total, setTotal] = React.useState("0.00");
 
   React.useEffect(() => {
     let t = new Decimal(0);
@@ -390,7 +391,7 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
       for (const b of balances) {
         t = t.add(b.balanceInFiat);
       }
-      setTotal(t.toNumber());
+      setTotal(t.toFixed(2));
     }
   }, [balances]);
 
@@ -406,8 +407,8 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
             <Img
               src={IMAGE_LINKS["close"]}
               alt="Description Image"
-              height={20}
-              width={20}
+              height={15}
+              width={15}
             />
           </CloseIcon>
         </Header>
@@ -415,8 +416,8 @@ const UnifiedBalance: React.FC<UnifiedBalanceComponentProps> = ({
         <BalanceCard>
           <Balance>
             <CurrencySmall>$</CurrencySmall>
-            <CurrencyLarge>{total.toString().split(".")[0]}.</CurrencyLarge>
-            <CurrencySmall>{total.toString().split(".")[1]}</CurrencySmall>
+            <CurrencyLarge>{total.split(".")[0]}.</CurrencyLarge>
+            <CurrencySmall>{total.split(".")[1]}</CurrencySmall>
           </Balance>
           <AddressCard>
             <AppTooltip message={address} $full={true}>
