@@ -14,6 +14,7 @@ const Container = styled.div`
   flex-direction: column;
   gap: 2px;
   width: 100%;
+  margin: 2rem auto;
 `;
 
 const Video = styled.video`

@@ -8,6 +8,7 @@ import {
 import { useCA } from "./useCA";
 import { useContext } from "react";
 import { CAErrorContext } from "../context";
+import { BaseError, SendTransactionErrorType } from "viem";
 
 function useSendTransaction<
   config extends Config = ResolvedRegister["config"],
@@ -39,11 +40,15 @@ function useSendTransaction<
           variables as Parameters<typeof r.sendTransaction>[0],
           options
         );
-      } catch (e: any) {
-        setError(e.message);
+      } catch (e) {
+        if (e instanceof BaseError) {
+          setError(e.shortMessage);
+        } else if (e instanceof Error) {
+          setError(e.message);
+        }
         if (options?.onError) {
           options.onError(
-            e,
+            e as SendTransactionErrorType,
             r.variables as Parameters<typeof r.sendTransaction>[0],
             r.context
           );
@@ -77,7 +82,11 @@ function useSendTransaction<
           );
         })
         .catch((e) => {
-          setError(e.message);
+          if (e instanceof BaseError) {
+            setError(e.shortMessage);
+          } else if (e instanceof Error) {
+            setError(e.message);
+          }
           if (options?.onError) {
             options.onError(
               e,
