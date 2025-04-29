@@ -1,10 +1,11 @@
 import { CA } from "@arcana/ca-sdk";
+import { Config } from "./types";
 
 let ca: CA | null = null;
 
-export const getCA = (network: "testnet" | "dev" = "testnet") => {
+export const getCA = (config: Config = {}) => {
   if (!ca) {
-    ca = new CA({ network });
+    ca = new CA({ network: config.network });
   }
   return ca;
 };
