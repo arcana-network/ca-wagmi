@@ -7,19 +7,20 @@ import {
 } from "@arcana/ca-sdk";
 import { useState, useEffect, useRef } from "react";
 import { clearAsyncInterval, setAsyncInterval } from "../utils/commonFunction";
-import { useAccountEffect } from "wagmi";
+import { useAccount } from "wagmi";
 
-type CurrentStep =
-  | "ub"
-  | "allowance"
-  | "intent"
-  | "progression"
-  | "loading"
-  | "none"
-  | "error";
+enum VIEW {
+  ERROR,
+  UB,
+  ALLOWANCE,
+  INTENT,
+  PROGRESSION,
+  LOADING,
+  NONE,
+}
 
 const useCAInternal = (ca: CA) => {
-  const [currentStep, setCurrentStep] = useState<CurrentStep>("none");
+  const [view, setView] = useState<VIEW>(VIEW.NONE);
   const [error, setError] = useState("");
   const [steps, setSteps] = useState<Array<ProgressStep & { done: boolean }>>(
     []
@@ -48,7 +49,7 @@ const useCAInternal = (ca: CA) => {
       intentP.current.intervalHandler = null;
     }
     intentP.current.allow();
-    setCurrentStep("progression");
+    setView(VIEW.PROGRESSION);
   };
 
   const intentDeny = () => {
@@ -62,7 +63,7 @@ const useCAInternal = (ca: CA) => {
 
   useEffect(() => {
     if (error) {
-      setCurrentStep("error");
+      setView(VIEW.ERROR);
     }
   }, [error]);
 
@@ -80,7 +81,7 @@ const useCAInternal = (ca: CA) => {
           setIntentRefreshing(false);
           console.timeEnd("intentRefresh");
         }, 5000);
-        setCurrentStep("intent");
+        setView(VIEW.INTENT);
       });
 
       ca.setOnAllowanceHook(async ({ allow, deny, sources }) => {
@@ -91,7 +92,7 @@ const useCAInternal = (ca: CA) => {
         allowanceP.current.allow = allow;
         allowanceP.current.deny = deny;
         allowanceP.current.allow(sources.map((s) => "max"));
-        setCurrentStep("allowance");
+        setView(VIEW.ALLOWANCE);
       });
 
       ca.caEvents.addListener("expected_steps", (data: ProgressSteps) => {
@@ -132,38 +133,51 @@ const useCAInternal = (ca: CA) => {
   }, [ca]);
 
   return {
-    setCurrentStep,
+    setView,
     intentRefreshing,
     steps,
-    currentStep,
-    intentP,
+    view,
+    intent: intentP.current.intent,
     intentAllow,
     intentDeny,
-    allowanceP,
+    allowanceSources: allowanceP.current.sources,
     error,
     setError,
   };
 };
 
+enum STATUS {
+  DISCONNECTED,
+  INPROGRESS,
+  CONNECTED,
+}
+
 const useProvideCA = (ca: CA) => {
   const [ready, setReady] = useState(false);
-  useAccountEffect({
-    async onConnect({ connector }) {
-      try {
-        const p = await connector.getProvider();
+  const [connState, setConnState] = useState<STATUS>(STATUS.DISCONNECTED);
+  const { status, connector } = useAccount();
+
+  if (status === "connected" && connState === STATUS.DISCONNECTED) {
+    setConnState(STATUS.INPROGRESS);
+    try {
+      connector.getProvider().then(async (p) => {
         ca.setEVMProvider(p as any);
         await ca.init();
         setReady(true);
-      } catch (e) {
-        console.log("ca did not connect. err = ", e);
-      }
-    },
-    onDisconnect() {
-      ca.deinit();
-      setReady(false);
-    },
-  });
+        setConnState(STATUS.CONNECTED);
+      });
+    } catch (e) {
+      console.log("ca did not connect. err = ", e);
+    }
+  }
+
+  if (status === "disconnected" && connState === STATUS.CONNECTED) {
+    setConnState(STATUS.INPROGRESS);
+    ca.deinit();
+    setReady(false);
+    setConnState(STATUS.DISCONNECTED);
+  }
   return { ca, ready };
 };
 
-export { useProvideCA, useCAInternal, CurrentStep };
+export { useProvideCA, useCAInternal, VIEW };
