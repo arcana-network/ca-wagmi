@@ -52,11 +52,7 @@ const ModalOverlay = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   justify-content: center;
   align-items: center;
   position: fixed;
-  ${({ $alwaysOnTop }) =>
-    $alwaysOnTop &&
-    css`
-      z-index: 2147483645;
-    `}
+  z-index: ${({ $alwaysOnTop }) => ($alwaysOnTop ? 2147483645 : 1)};
 `;
 
 const ModalContainer = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
@@ -70,11 +66,7 @@ const ModalContainer = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   text-align: center;
   overflow: hidden;
   animation: ${({ $isopen }) => ($isopen ? slideIn : slideOut)} 0.3s ease-out;
-  ${({ $alwaysOnTop }) =>
-    $alwaysOnTop &&
-    css`
-      z-index: 2147483646;
-    `}
+  z-index: ${({ $alwaysOnTop }) => ($alwaysOnTop ? 2147483645 : 2)};
 `;
 
 const Footer = styled.footer`
