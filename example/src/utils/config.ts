@@ -47,4 +47,4 @@ export const config = createConfig({
   },
 });
 
-export const network = Network.FOLLY;
+export const network = Network.CORAL;
