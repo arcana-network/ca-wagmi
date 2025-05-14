@@ -372,6 +372,10 @@ const chainToCurrency: {
     "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     "0xa219439258ca9da29e9cc4ce5596924745e12b93",
   ],
+  43114: [
+    "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
+    "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
+  ],
   // Testnet chains (supported in folly)
   421614: [
     "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
@@ -393,6 +397,7 @@ const idToExplorer: { [k: number]: string } = {
   8453: "https://basescan.org/",
   534352: "https://scrollscan.com/",
   59144: "https://lineascan.build/",
+  43114: "https://snowtrace.io/",
 
   // Testnet chains (supported in folly)
   421614: "https://sepolia.arbiscan.io/",
