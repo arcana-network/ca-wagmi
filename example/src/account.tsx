@@ -397,7 +397,7 @@ const idToExplorer: { [k: number]: string } = {
   8453: "https://basescan.org/",
   534352: "https://scrollscan.com/",
   59144: "https://lineascan.build/",
-  43114: "https://snowtrace.io/",
+  43114: "https://snowscan.xyz",
 
   // Testnet chains (supported in folly)
   421614: "https://sepolia.arbiscan.io/",
