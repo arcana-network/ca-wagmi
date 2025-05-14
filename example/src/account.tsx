@@ -5,17 +5,21 @@ import {
   useSwitchChain,
   // useSendTransaction
 } from "wagmi";
+import { network } from "./utils/config";
 import {
   useSendTransaction,
   useWriteContract,
   useBalanceModal,
-  useBalance,
+  getSupportedChains,
+  useCAFn,
 } from "@arcana/ca-wagmi";
 import { Toast, Toaster, createToaster } from "@ark-ui/react/toast";
 
 import { useState } from "react";
 import Decimal from "decimal.js";
 import { erc20Abi } from "viem";
+
+const chains = getSupportedChains(network);
 const toaster = createToaster({
   placement: "top-end",
   overlap: false,
@@ -47,7 +51,7 @@ export function Account() {
   const { disconnect } = useDisconnect();
   const { data: ensName } = useEnsName({ address });
   const { showModal } = useBalanceModal();
-  const { loading } = useBalance({ symbol: "ETH" });
+  const { ready } = useCAFn();
   const { switchChainAsync } = useSwitchChain();
   const { writeContract } = useWriteContract();
 
@@ -186,7 +190,7 @@ export function Account() {
           </Toast.Root>
         )}
       </Toaster>
-      {loading ? (
+      {!ready ? (
         <div role="status" className="flex items-center justify-center">
           <svg
             aria-hidden="true"
@@ -253,14 +257,11 @@ export function Account() {
                 <option value="" disabled>
                   Select a chain
                 </option>
-
-                <option value="42161">Arbitrum One</option>
-                <option value="59144">Linea</option>
-                <option value="534352">Scroll</option>
-                <option value="10">Optimism</option>
-                <option value="8453">Base</option>
-                <option value="1">Ethereum</option>
-                <option value="137">Polygon POS</option>
+                {chains.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="mb-5">
@@ -342,6 +343,7 @@ export function Account() {
   );
 }
 
+// [USDC, USDT]
 const chainToCurrency: {
   [k: number]: [`0x${string}` | null, `0x${string}` | null];
 } = {
@@ -370,6 +372,17 @@ const chainToCurrency: {
     "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     "0xa219439258ca9da29e9cc4ce5596924745e12b93",
   ],
+  // Testnet chains (supported in folly)
+  421614: [
+    "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+    "0xF954d4A5859b37De88a91bdbb8Ad309056FB04B1",
+  ],
+  11155420: [
+    "0x5fd84259d66Cd46123540766Be93DFE6D43130D7",
+    "0x6462693c2F21AC0E517f12641D404895030F7426",
+  ],
+  80002: ["0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582", null],
+  84532: ["0x036CbD53842c5426634e7929541eC2318f3dCF7e", null],
 };
 
 const idToExplorer: { [k: number]: string } = {
@@ -380,4 +393,10 @@ const idToExplorer: { [k: number]: string } = {
   8453: "https://basescan.org/",
   534352: "https://scrollscan.com/",
   59144: "https://lineascan.build/",
+
+  // Testnet chains (supported in folly)
+  421614: "https://sepolia.arbiscan.io/",
+  11155420: "https://sepolia-optimism.etherscan.io/",
+  80002: "https://amoy.polygonscan.com/",
+  84532: "https://sepolia.basescan.org/",
 };

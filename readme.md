@@ -101,22 +101,31 @@ const balance = useBalance({ symbol: "eth" })
 
 ##### Response
 
-| Field | Type |
-| :-----| :--- |
-| loading | `boolean` |
-| data | `{ symbol: string, decimals: number, formatted: string, value: bigint} \| null` |
-| error | `Error \| null` |
+`UseQueryResult<UseBalanceValue[] | null>`
 
 **Sample Response**
 
 ```js
 {
-    loading: false,
+    isLoading: false,
+    isFetching: false,
+    isSuccess: true,
+    isError: false,
     data: {
       symbol: "ETH",
       decimals: 18,
       formatted: "0.000785657313049966"
       value: 785657313049966n
+      breakdown: {
+        chain: {
+          id: 1,
+          name: "Ethereum",
+          logo: "..."
+        },
+        formatted: "0.000785657313049966",
+        address: "0x0000000000000000000000000000000000000000",
+        value: 785657313049966n
+      }
     },
     error: null
 } 
@@ -139,17 +148,16 @@ const balances = useBalances()
 
 ##### Response
 
-| Parameter | Type |
-| :-------- | :--- |
-| loading   | `boolean` |
-| data      | `UseBalanceValue[] \| null` |
-| error     | `Error \| null` |
+`UseQueryResult<UseBalancesValue[] | null>`
 
 **Sample Response**
 
 ```js
 {
-  loading: false,
+  isLoading: false,
+  isFetching: false,
+  isSuccess: true,
+  isError: false,
   data: [{
     symbol: "ETH",
     decimals: 18,

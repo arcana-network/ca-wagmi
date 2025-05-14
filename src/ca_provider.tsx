@@ -9,29 +9,30 @@ import UnifiedBalance from "./components/UnifiedBalance";
 import GlobalStyles from "./components/GlobalStyles";
 import ErrorBox from "./components/Error";
 import { getCA } from "./ca";
-import { useCAInternal, useProvideCA } from "./hooks/useCAInternal";
+import { useCAInternal, useProvideCA, VIEW } from "./hooks/useCAInternal";
 import Decimal from "decimal.js";
+import { Config } from "./types";
 
 Decimal.set({ toExpNeg: -18 });
 
 export const CAProvider = ({
   children,
-  network,
+  config,
 }: {
-  network?: "testnet" | "dev";
+  config?: Config;
   children?: React.ReactNode;
 }) => {
-  const provider = getCA(network);
+  const provider = getCA(config);
   const { ca, ready } = useProvideCA(provider);
   const {
-    steps,
-    setCurrentStep,
-    currentStep,
-    intentP,
-    allowanceP,
-    intentRefreshing,
-    intentDeny,
+    intent,
     intentAllow,
+    intentDeny,
+    intentRefreshing,
+    allowanceSources,
+    steps,
+    setView,
+    view,
     error,
     setError,
   } = useCAInternal(ca);
@@ -44,41 +45,41 @@ export const CAProvider = ({
           <CAErrorContext.Provider value={{ error, setError }}>
             <CAUnifiedBalanceContext.Provider
               value={{
-                visible: currentStep === "ub",
-                setVisible: (v) => setCurrentStep(v ? "ub" : "none"),
+                visible: view === VIEW.UB,
+                setVisible: (v) => setView(v ? VIEW.UB : VIEW.NONE),
               }}
             >
               <>
                 <Modal
-                  alwaysOnTop={currentStep !== "progression"}
-                  isopen={currentStep !== "none"}
+                  alwaysOnTop={view !== VIEW.PROGRESSION}
+                  isopen={view !== VIEW.NONE}
                 >
                   <AllowanceSetup
-                    $display={currentStep === "allowance"}
-                    sources={allowanceP.current.sources}
+                    $display={view === VIEW.ALLOWANCE}
+                    sources={allowanceSources}
                   />
                   <IntentView
-                    $display={currentStep === "intent"}
-                    intent={intentP.current.intent}
+                    $display={view === VIEW.INTENT}
+                    intent={intent}
                     allow={intentAllow}
                     deny={intentDeny}
                     intentRefreshing={intentRefreshing}
                   />
                   <Progress
                     intentSteps={steps}
-                    $display={currentStep === "progression"}
-                    close={() => setCurrentStep("none")}
+                    $display={view === VIEW.PROGRESSION}
+                    close={() => setView(VIEW.NONE)}
                   />
                   <UnifiedBalance
-                    $display={currentStep === "ub"}
-                    close={() => setCurrentStep("none")}
+                    $display={view === VIEW.UB}
+                    close={() => setView(VIEW.NONE)}
                   />
                   <ErrorBox
-                    $display={currentStep === "error"}
+                    $display={view === VIEW.ERROR}
                     message={error}
                     close={() => {
                       setError("");
-                      setCurrentStep("none");
+                      setView(VIEW.NONE);
                     }}
                   />
                 </Modal>

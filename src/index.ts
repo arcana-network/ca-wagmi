@@ -10,8 +10,12 @@ import { useWriteContract } from "./hooks/useWriteContract";
 import { useCAFn } from "./hooks/useCA";
 import { CAUnifiedBalanceContext } from "./context";
 import type { UseBalanceReturnValue } from "./hooks/useUnifiedBalance";
+import { Network, CA } from "@arcana/ca-sdk";
+
+const getSupportedChains = CA.getSupportedChains;
 
 export {
+  Network,
   useSendTransaction,
   useWriteContract,
   useBalance,
@@ -21,6 +25,7 @@ export {
   useUnifiedBalance,
   CAProvider,
   CAUnifiedBalanceContext,
+  getSupportedChains,
 };
 
 export type { UseBalanceReturnValue as UseBalanceValue };

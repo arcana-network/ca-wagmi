@@ -65,5 +65,5 @@ export const useCAFn = () => {
     }
   };
 
-  return { bridge, transfer };
+  return { bridge, transfer, ready };
 };

@@ -12,10 +12,7 @@ export const useTheme = () => useContext(ThemeContext);
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Fallback to system preference
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleTheme = () => {
     setIsDarkMode((prev) => {
@@ -30,16 +27,18 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsDarkMode(theme == "dark");
     };
 
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", handleMediaChange);
-
-    //good house keeping to remove listener, good article here https://www.pluralsight.com/guides/how-to-cleanup-event-listeners-react
-    return () => {
+    if (window) {
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", handleMediaChange);
-    };
+        .addEventListener("change", handleMediaChange);
+
+      //good house keeping to remove listener, good article here https://www.pluralsight.com/guides/how-to-cleanup-event-listeners-react
+      return () => {
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .removeEventListener("change", handleMediaChange);
+      };
+    }
   }, []);
 
   return (
