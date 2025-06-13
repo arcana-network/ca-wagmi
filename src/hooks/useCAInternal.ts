@@ -117,19 +117,19 @@ const useCAInternal = (ca: CA) => {
           const tid = data.typeID.split("_")[1];
           const chainID = parseInt(tid, 10);
           const v = allowanceP.current.sources.find(
-            (a) => a.chainID === chainID
+            (a) => a.chain.id === chainID
           );
           if (v) {
             v.done = true;
           }
         }
       });
-    }
 
-    return () => {
-      ca.caEvents.removeAllListeners("expected_steps");
-      ca.caEvents.removeAllListeners("step_complete");
-    };
+      return () => {
+        ca.caEvents.removeAllListeners("expected_steps");
+        ca.caEvents.removeAllListeners("step_complete");
+      };
+    }
   }, [ca]);
 
   return {
@@ -154,30 +154,32 @@ enum STATUS {
 
 const useProvideCA = (ca: CA) => {
   const [ready, setReady] = useState(false);
-  const [connState, setConnState] = useState<STATUS>(STATUS.DISCONNECTED);
-  const { status, connector } = useAccount();
+  const [connectionStatus, setConnectionStatus] = useState<STATUS>(
+    STATUS.DISCONNECTED
+  );
+  const { status, connector, address } = useAccount();
 
-  if (status === "connected" && connState === STATUS.DISCONNECTED) {
-    setConnState(STATUS.INPROGRESS);
+  if (status === "connected" && connectionStatus === STATUS.DISCONNECTED) {
+    setConnectionStatus(STATUS.INPROGRESS);
     try {
       connector.getProvider().then(async (p) => {
-        ca.setEVMProvider(p as any);
+        await ca.setEVMProvider(p as any);
         await ca.init();
         setReady(true);
-        setConnState(STATUS.CONNECTED);
+        setConnectionStatus(STATUS.CONNECTED);
       });
     } catch (e) {
       console.log("ca did not connect. err = ", e);
     }
   }
 
-  if (status === "disconnected" && connState === STATUS.CONNECTED) {
-    setConnState(STATUS.INPROGRESS);
+  if (status === "disconnected" && connectionStatus === STATUS.CONNECTED) {
+    setConnectionStatus(STATUS.INPROGRESS);
     ca.deinit();
     setReady(false);
-    setConnState(STATUS.DISCONNECTED);
+    setConnectionStatus(STATUS.DISCONNECTED);
   }
-  return { ca, ready };
+  return { ca, ready, address };
 };
 
 export { useProvideCA, useCAInternal, VIEW };

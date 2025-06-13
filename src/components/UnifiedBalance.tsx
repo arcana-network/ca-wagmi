@@ -209,6 +209,8 @@ const BreakdownContainer = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem;
+  max-height: 150px;
+  overflow-y: scroll;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.chainAbsBackGround};
 `;

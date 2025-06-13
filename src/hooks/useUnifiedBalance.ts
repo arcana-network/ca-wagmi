@@ -105,7 +105,7 @@ const useBalance = ({ symbol }: UseBalanceParams): UseBalanceReturn => {
               chain: b.chain,
               formatted: b.balance,
               address: b.contractAddress,
-              value: convertToDecimals(b.balance, val.decimals),
+              value: convertToDecimals(b.balance, b.decimals),
             };
           }),
         };
@@ -140,7 +140,7 @@ const useBalances = (): UseBalancesReturn => {
                 chain: b.chain,
                 formatted: b.balance,
                 address: b.contractAddress,
-                value: convertToDecimals(b.balance, v.decimals),
+                value: convertToDecimals(b.balance, b.decimals),
               };
             }),
           };
@@ -156,7 +156,7 @@ const useBalances = (): UseBalancesReturn => {
 };
 
 const convertToDecimals = (value: string, decimals: number) => {
-  return BigInt(new Decimal(value).mul(Decimal.pow(10, decimals)).toString());
+  return BigInt(new Decimal(value).mul(Decimal.pow(10, decimals)).toFixed());
 };
 
 export { useUnifiedBalance, useBalanceModal, useBalance, useBalances };

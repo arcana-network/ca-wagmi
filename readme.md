@@ -1,102 +1,106 @@
 # Chain Abstraction (Wagmi PnP)
 
-The Arcana `ca-wagmi` SDK simplifies Web3 apps built with the Wagmi library by providing a unified balance across blockchains through easy-to-use `useBalance` and `useBalanceModal` hooks. It also replaces the Wagmi hooks `useSendTransaction` and `useWriteContract` to support chain-abstracted transactions. 
+The Arcana `ca-wagmi` SDK simplifies Web3 apps built with the Wagmi library by providing a unified balance across blockchains through easy-to-use `useBalance` and `useBalanceModal` hooks. It also replaces the Wagmi hooks `useSendTransaction` and `useWriteContract` to support chain-abstracted transactions.
 
 ## Quick start
 
 ```ts
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { WagmiProvider } from 'wagmi'
-import { config } from './config'
-import { CAProvider } from '@arcana/ca-wagmi'
-import { App } from "./App"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider } from "wagmi";
+import { config } from "./config";
+import { CAProvider } from "@arcana/ca-wagmi";
+import { CA } from "@arcana/ca-sdk";
+import { App } from "./App";
 
-const queryClient = new QueryClient()
+const ca = new CA();
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <CAProvider>
+        <CAProvider client={ca}>
           <App />
         </CAProvider>
       </QueryClientProvider>
     </WagmiProvider>
-  )
+  );
 }
 ```
 
 ```ts
-App.jsx
+App.jsx;
 
 // import { useSendTransaction } from 'wagmi'
-import { useSendTransaction } from '@arcana/ca-wagmi'
-import { parseEther } from 'viem'
+import { useSendTransaction } from "@arcana/ca-wagmi";
+import { parseEther } from "viem";
 
 function App() {
-  const { sendTransaction } = useSendTransaction()
+  const { sendTransaction } = useSendTransaction();
 
   return (
     <button
       onClick={() =>
         sendTransaction({
-          to: '0xd2135CfB216b74109775236E36d4b433F1DF507B',
-          value: parseEther('0.01'),
+          to: "0xd2135CfB216b74109775236E36d4b433F1DF507B",
+          value: parseEther("0.01"),
         })
       }
     >
       Send transaction
     </button>
-  )
+  );
 }
 ```
 
 ## Hooks
 
-There are two kinds of hooks implemented by the `ca-wagmi` SDK. 
+There are two kinds of hooks implemented by the `ca-wagmi` SDK.
 
-* Wagmi hooks (Re-implemented / Replaced)
-* Arcana `ca-wagmi` hooks to enable unified balance and chain abstracted transactions
+- Wagmi hooks (Re-implemented / Replaced)
+- Arcana `ca-wagmi` hooks to enable unified balance and chain abstracted transactions
 
 ### Wagmi Hooks
 
 Following Wagmi hooks have been replaced by the Arcana `ca-wagmi` SDK to ensure chain abstraction is enabled automatically in the transaction flow with no changes to the app code.
 
 ```ts
-import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi"
+import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi";
 
 // Replaces `wagmi` hook: `useSendTransaction`
-const { sendTransaction, sendTransactionAsync } = useSendTransaction() 
+const { sendTransaction, sendTransactionAsync } = useSendTransaction();
 
 // Replaces `wagmi` hook: `useWriteContract`
-const { writeContract, writeContractAsync } = useWriteContract() 
+const { writeContract, writeContractAsync } = useWriteContract();
 ```
 
 ### Arcana `ca-wagmi` Hooks
 
 The following hooks allow developers to access unified balance and enable chain abstracted bridge and transfer operations in a Wagmi app.
 
-* [useBalance](#usebalance)
-* [useBalances](#usebalances)
-* [useBalanceModal](#usebalancemodal)
-* [useCAFn](#usecafn)
+- [useBalance](#usebalance)
+- [useBalances](#usebalances)
+- [useBalanceModal](#usebalancemodal)
+- [useCAFn](#usecafn)
+- [useGetMyIntents](#usegetmyintents)
 
 #### useBalance
+
 <hr>
-Get the unified balance across all supported chains associated with the EoA for the specified token symbol. 
+Get the unified balance across all supported chains associated with the EoA for the specified token symbol.
 
 ##### Usage
 
 `useBalance({ symbol: string })`
 
-| Parameter | Required | Type | Description |
-| :-------- | :------- | :--- | :---------- |
-| symbol | yes | string | Should be one of the supported currencies |
+| Parameter | Required | Type   | Description                               |
+| :-------- | :------- | :----- | :---------------------------------------- |
+| symbol    | yes      | string | Should be one of the supported currencies |
 
 ```javascript
-import { useBalance } from "@arcana/ca-wagmi"
+import { useBalance } from "@arcana/ca-wagmi";
 
-const balance = useBalance({ symbol: "eth" })
+const balance = useBalance({ symbol: "eth" });
 ```
 
 ##### Response
@@ -128,22 +132,23 @@ const balance = useBalance({ symbol: "eth" })
       }
     },
     error: null
-} 
+}
 ```
 
 #### useBalances
+
 <hr>
 
-Get the unified balances across all supported chains associated with the EoA for every supported token type.  
+Get the unified balances across all supported chains associated with the EoA for every supported token type.
 
 ##### Usage
 
 `useBalances()`
 
 ```javascript
-import { useBalances } from "@arcana/ca-wagmi"
+import { useBalances } from "@arcana/ca-wagmi";
 
-const balances = useBalances()
+const balances = useBalances();
 ```
 
 ##### Response
@@ -175,10 +180,11 @@ const balances = useBalances()
     }]
   }],
   error: null
-} 
+}
 ```
 
 #### useBalanceModal
+
 <hr>
 
 Display or hide the popup displaying the unified balance in the context of the user EoA.
@@ -188,19 +194,20 @@ Display or hide the popup displaying the unified balance in the context of the u
 `useBalanceModal()`
 
 ```javascript
-import { useBalanceModal } from "@arcana/ca-wagmi"
+import { useBalanceModal } from "@arcana/ca-wagmi";
 
-const { showModal, hideModal } = useBalanceModal()
+const { showModal, hideModal } = useBalanceModal();
 ```
 
 ##### Response
 
-| Field | Type |
-| :-------- | :-------- |
+| Field     | Type         |
+| :-------- | :----------- |
 | showModal | `() => void` |
 | hideModal | `() => void` |
 
 #### useCAFn
+
 <hr>
 
 Initiate a chain abstracted `bridge` or `transfer` function in the context of the user EoA.
@@ -210,27 +217,78 @@ Initiate a chain abstracted `bridge` or `transfer` function in the context of th
 `useCAFn()`
 
 ```javascript
-import { useCAFn } from "@arcana/ca-wagmi"
+import { useCAFn } from "@arcana/ca-wagmi";
 
-const { bridge, transfer } = useCAFn()
- 
+const { bridge, transfer } = useCAFn();
+
 await bridge({
   token: "usdt",
   amount: "1.5",
-  chain: 42161
-})
+  chain: 42161,
+});
 
 const hash = await transfer({
   to: "0x80129F3d408545e51d051a6D3e194983EB7801e8",
   token: "usdt",
   amount: "1.5",
-  chain: 10
-})
+  chain: 10,
+});
 ```
 
 ##### Response
 
-| Field | Type |
-| :---- | :-------- |
-| bridge | `({ token: string, amount: string, chain: number }) => Promise<unknown>` |
+| Field    | Type                                                                                        |
+| :------- | :------------------------------------------------------------------------------------------ |
+| bridge   | `({ token: string, amount: string, chain: number }) => Promise<unknown>`                    |
 | transfer | `({ token: string, amount: string, chain: number, to: "0x${string}" }) => Promise<unknown>` |
+
+#### useGetMyIntents
+
+<hr>
+
+Get a list of intents created by the user
+
+##### Usage
+
+`useGetMyIntents(page)`
+
+```javascript
+import { useGetMyIntents } from "@arcana/ca-wagmi";
+
+const getMyIntentsResponse = useGetMyIntents(1);
+```
+
+##### Response
+
+`UseQueryResult<RequestForFunds[] | null>`
+
+**Sample Response**
+
+```js
+{
+  isLoading: false,
+  isFetching: false,
+  isSuccess: true,
+  isError: false,
+  data: [{
+    id: Long {low: 88, high: 0, unsigned: true},
+    sources: [{
+      universe: 0
+      tokenAddress: Uint8Array(32) [...]
+      value: Uint8Array(2) [161, 134]
+    }],
+    destinations: [{
+      tokenAddress: Uint8Array(32) [...]
+      value: Uint8Array(2) [161, 134]
+    }],
+    destinationUniverse: 0,
+    destinationChainID: Uint8Array(32) [...]
+    fulfilled: true,
+    refunded: false,
+    settled: true,
+    expiry: Long {low: 1749794113, high: 0, unsigned: true},
+    deposited: true
+  }],
+  error: null
+}
+```

@@ -8,22 +8,20 @@ import AllowanceSetup from "./components/AllowanceSetup";
 import UnifiedBalance from "./components/UnifiedBalance";
 import GlobalStyles from "./components/GlobalStyles";
 import ErrorBox from "./components/Error";
-import { getCA } from "./ca";
+import { CA } from "@arcana/ca-sdk";
 import { useCAInternal, useProvideCA, VIEW } from "./hooks/useCAInternal";
-import Decimal from "decimal.js";
 import { Config } from "./types";
-
-Decimal.set({ toExpNeg: -18 });
 
 export const CAProvider = ({
   children,
-  config,
+  client,
+  config
 }: {
-  config?: Config;
+  config?: Config,
+  client: CA;
   children?: React.ReactNode;
 }) => {
-  const provider = getCA(config);
-  const { ca, ready } = useProvideCA(provider);
+  const { ca, ready, address } = useProvideCA(client);
   const {
     intent,
     intentAllow,
@@ -40,8 +38,8 @@ export const CAProvider = ({
   return (
     <>
       <GlobalStyles />
-      <CAContext.Provider value={{ ca, ready }}>
-        <ThemeProvider>
+      <CAContext.Provider value={{ ca, ready, address }}>
+        <ThemeProvider theme={config?.theme}>
           <CAErrorContext.Provider value={{ error, setError }}>
             <CAUnifiedBalanceContext.Provider
               value={{
