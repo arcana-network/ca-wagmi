@@ -1,4 +1,4 @@
-import { Network } from "@arcana/ca-sdk";
+import { CA, Network } from "@arcana/ca-sdk";
 import { http, createConfig } from "wagmi";
 import {
   mainnet,
@@ -51,3 +51,12 @@ export const config = createConfig({
 });
 
 export const network = Network.CORAL;
+
+const ca = new CA({
+  network,
+  debug: true,
+});
+
+export const getCA = () => {
+  return ca;
+};

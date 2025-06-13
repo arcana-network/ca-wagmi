@@ -12,6 +12,7 @@ import {
   useBalanceModal,
   getSupportedChains,
   useCAFn,
+  useGetMyIntents
 } from "@arcana/ca-wagmi";
 import { Toast, Toaster, createToaster } from "@ark-ui/react/toast";
 
@@ -54,7 +55,9 @@ export function Account() {
   const { ready } = useCAFn();
   const { switchChainAsync } = useSwitchChain();
   const { writeContract } = useWriteContract();
-
+  const myIntents = useGetMyIntents()
+  
+  console.log({ myIntents })
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -77,7 +80,7 @@ export function Account() {
       let amount = new Decimal(amountFV as string);
       if (asset.toLowerCase() === "ETH".toLowerCase()) {
         amount = amount.mul(new Decimal(10).pow(18));
-        const value = BigInt(amount.toString());
+        const value = BigInt(amount.toFixed(0));
         sendTransaction(
           {
             to,
@@ -112,7 +115,7 @@ export function Account() {
             address: s,
             abi: erc20Abi,
             functionName: "transfer",
-            args: [to, BigInt(amount.mul(new Decimal(10).pow(6)).toString())],
+            args: [to, BigInt(amount.mul(new Decimal(10).pow(6)).toFixed(0))],
           },
           {
             onSuccess(hash) {
