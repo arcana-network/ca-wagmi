@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <CAProvider client={getCA()} config={{theme: "dark"}}>
+        <CAProvider client={getCA()} config={{ theme: "dark" }}>
           <App />
         </CAProvider>
       </QueryClientProvider>

@@ -10,8 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arcana/ca-sdk": "^1.0.0-beta.13",
-    "@arcana/ca-wagmi": "^1.0.0-beta.2",
+    "@arcana/ca-sdk": "^1.0.0",
+    "@arcana/ca-wagmi": "^1.0.0-beta.4",
     "@ark-ui/react": "^5.0.0",
     "@tailwindcss/vite": "^4.0.3",
     "@tanstack/react-query": "^5.62.3",
