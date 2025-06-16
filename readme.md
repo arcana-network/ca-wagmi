@@ -260,7 +260,7 @@ const getMyIntentsResponse = useGetMyIntents(1);
 
 ##### Response
 
-`UseQueryResult<RequestForFunds[] | null>`
+`UseQueryResult<RFF[] | null>`
 
 **Sample Response**
 
@@ -271,22 +271,22 @@ const getMyIntentsResponse = useGetMyIntents(1);
   isSuccess: true,
   isError: false,
   data: [{
-    id: Long {low: 88, high: 0, unsigned: true},
+    id: 107,
     sources: [{
-      universe: 0
-      tokenAddress: Uint8Array(32) [...]
-      value: Uint8Array(2) [161, 134]
+      universe: "ETHEREUM",
+      tokenAddress: "0x0b2c639c533813f4aa9d7837caf62653d097ff85",
+      value: 18531n,
+      chainID: 10,
     }],
     destinations: [{
-      tokenAddress: Uint8Array(32) [...]
-      value: Uint8Array(2) [161, 134]
+      tokenAddress: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+      value: 10000n,
     }],
-    destinationUniverse: 0,
-    destinationChainID: Uint8Array(32) [...]
+    destinationUniverse: "ETHEREUM",
+    destinationChainID: 42161
     fulfilled: true,
     refunded: false,
-    settled: true,
-    expiry: Long {low: 1749794113, high: 0, unsigned: true},
+    expiry: 1750070223,
     deposited: true
   }],
   error: null

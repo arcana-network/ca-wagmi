@@ -55,11 +55,14 @@ const ModalOverlay = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
   z-index: ${({ $alwaysOnTop }) => ($alwaysOnTop ? 2147483645 : 1)};
 `;
 
-const ModalContainer = styled.div<{ $isopen: boolean; $alwaysOnTop: boolean }>`
+const ModalContainer = styled.div<{
+  $isopen: boolean;
+  $alwaysOnTop: boolean;
+}>`
   background: ${({ theme }) => theme.modalBackground};
   border: ${({ theme }) => `1px solid ${theme.backgroundColor}`};
-  padding: 20px;
-  border-radius: 10px;
+  padding: 1.5rem;
+  border-radius: 14px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 400px;
@@ -74,9 +77,9 @@ const Footer = styled.footer`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  gap: 10px;
+  gap: 7px;
   font-family: "Inter", sans-serif;
-  margin-top: 10px;
+  margin-top: 1.25rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: ${({ theme }) => theme.primaryColor};

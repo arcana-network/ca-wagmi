@@ -15,9 +15,9 @@ import { Config } from "./types";
 export const CAProvider = ({
   children,
   client,
-  config
+  config,
 }: {
-  config?: Config,
+  config?: Config;
   client: CA;
   children?: React.ReactNode;
 }) => {

@@ -92,7 +92,7 @@ const SectionWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 6px 0px;
-  margin-top: 25px;
+  margin-top: 2rem;
 `;
 
 const FlexContainer = styled.div`
@@ -185,7 +185,7 @@ const AllowanceSetup: React.FC<{
                       <ChainLogo src={src.chain.logo} alt="Chain Logo" />
                     </RelativeContainer>
                     <TokenDetails>
-                      <TokenName>{src.token.name}</TokenName>
+                      <TokenName>{src.token.symbol}</TokenName>
                       <ChainName>{src.chain.name}</ChainName>
                     </TokenDetails>
                   </FlexContainer>
