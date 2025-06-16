@@ -12,9 +12,9 @@ const MainContainer = styled(MainContainerBase)``;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 12px;
   width: 100%;
-  margin: 2rem auto;
+  margin: 2rem auto 0 auto;
 `;
 
 const Video = styled.video`
@@ -39,10 +39,7 @@ const StyledCheckbox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  /* transition: all 0.3s; */
   border-radius: 12px;
-  margin: 6px 0px;
 `;
 
 const StyledCheckboxLabel = styled(CheckboxLabel)<{ disabled: boolean }>`

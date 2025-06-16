@@ -1,5 +1,5 @@
-import { SDKConfig } from "@arcana/ca-sdk";
-
 export type Config = {
-  network?: SDKConfig["network"];
+  theme: ThemeType;
 };
+
+export type ThemeType = "dark" | "light";

@@ -32,14 +32,24 @@ function useWriteContract<
         variables as Parameters<typeof originalWriteContractAsync>[0]
       );
       try {
-        await ca.preprocess({
-          to: variables.address,
-          data: data,
-          value:
-            typeof variables.value === "bigint"
-              ? `0x${variables.value.toString(16)}`
-              : undefined,
-        });
+        await ca.handleEVMTx(
+          {
+            method: "eth_sendTransaction",
+            params: [
+              {
+                to: variables.address,
+                data: data,
+                value:
+                  typeof variables.value === "bigint"
+                    ? `0x${variables.value.toString(16)}`
+                    : undefined,
+              },
+            ],
+          },
+          {
+            skipTx: true,
+          }
+        );
         return await originalWriteContractAsync(variables, options);
       } catch (e) {
         if (e instanceof BaseError) {
@@ -67,14 +77,24 @@ function useWriteContract<
         variables as Parameters<typeof originalWriteContract>[0]
       );
 
-      ca.preprocess({
-        to: variables.address,
-        data: data,
-        value:
-          typeof variables.value === "bigint"
-            ? `0x${variables.value.toString(16)}`
-            : undefined,
-      })
+      ca.handleEVMTx(
+        {
+          method: "eth_sendTransaction",
+          params: [
+            {
+              to: variables.address,
+              data: data,
+              value:
+                typeof variables.value === "bigint"
+                  ? `0x${variables.value.toString(16)}`
+                  : undefined,
+            },
+          ],
+        },
+        {
+          skipTx: true,
+        }
+      )
         .then(() => {
           return originalWriteContract(variables, options);
         })

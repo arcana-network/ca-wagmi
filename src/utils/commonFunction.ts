@@ -42,9 +42,9 @@ const getReadableNumber = (input: string) => {
     return "0";
   }
   if (n.lessThan(THRESHOLD_AMOUNT)) {
-    return `~${THRESHOLD_AMOUNT.toString()}`;
+    return `~${THRESHOLD_AMOUNT.toFixed()}`;
   }
-  return n.toDecimalPlaces(6).toString();
+  return n.toFixed(6);
 };
 
 export {

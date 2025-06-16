@@ -92,7 +92,7 @@ const SectionWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 6px 0px;
-  margin-top: 25px;
+  margin-top: 2rem;
 `;
 
 const FlexContainer = styled.div`
@@ -126,20 +126,20 @@ const ChainLogo = styled.img`
 
 const TokenDetails = styled.div`
   display: flex;
-  gap: 4px;
+  gap: 8px;
   align-items: center;
 `;
 
 const TokenName = styled.span`
   font-family: "Inter", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 500;
   color: ${({ theme }) => theme.primaryColor};
 `;
 
 const ChainName = styled.div`
   font-family: "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 400;
   color: ${({ theme }) => theme.secondaryTitleColor};
 `;
@@ -176,17 +176,17 @@ const AllowanceSetup: React.FC<{
       <Card>
         {sources.map((src, index: number) => (
           <Container key={index}>
-            <Checkbox.Root value={src.chainName} checked={src.done}>
+            <Checkbox.Root value={src.chain.name} checked={src.done}>
               <StyledCheckbox>
                 <StyledCheckboxLabel disabled={index >= currentStep}>
                   <FlexContainer>
                     <RelativeContainer>
                       <Logo src={src.token.logo} alt="Token Logo" />
-                      <ChainLogo src={src.chainLogo} alt="Chain Logo" />
+                      <ChainLogo src={src.chain.logo} alt="Chain Logo" />
                     </RelativeContainer>
                     <TokenDetails>
-                      <TokenName>{src.token.name}</TokenName>
-                      <ChainName>{src.chainName}</ChainName>
+                      <TokenName>{src.token.symbol}</TokenName>
+                      <ChainName>{src.chain.name}</ChainName>
                     </TokenDetails>
                   </FlexContainer>
                 </StyledCheckboxLabel>

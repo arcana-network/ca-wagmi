@@ -9,7 +9,11 @@ import { getReadableNumber } from "../utils/commonFunction";
 import type { Intent } from "@arcana/ca-sdk";
 import Decimal from "decimal.js";
 
-const MainContainer = styled(MainContainerBase)``;
+const MainContainer = styled(MainContainerBase)`
+  gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+`;
 const Root = styled(Accordion.Root)`
   display: flex;
   flex-direction: column;
@@ -77,7 +81,7 @@ const TotalFeesValue = styled.span`
 
 const TotalAtDestinationValue = styled.span`
   font-family: "Inter", sans-serif;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: ${({ theme }) => theme.primaryTitleColor};
 `;
@@ -108,11 +112,11 @@ const AccordionContent = styled(Accordion.ItemContent)`
 const FeeDetails = styled.div`
   background: ${({ theme }) => theme.cardDetailsBackGround};
   border: ${({ theme }) => `1px solid ${theme.backgroundColor}`};
-  border-radius: 0.5rem;
+  border-radius: 0.6rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 `;
 
 const FeeRow = styled.div`
@@ -140,7 +144,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 `;
 
 const Title = styled.div`
@@ -330,7 +334,6 @@ const IntentView: React.FC<{
               </TotalFees>
               {rates?.[intent?.token?.symbol] && (
                 <TotalAtDestination>
-                  ~
                   {(
                     Number(intent?.sourcesTotal) /
                     Number(rates[intent?.token?.symbol])
@@ -391,7 +394,6 @@ const IntentView: React.FC<{
               </TotalFees>
               {rates?.[intent?.token?.symbol] && (
                 <TotalAtDestination>
-                  ~
                   {(
                     Number(intent.fees.total) /
                     Number(rates[intent.token.symbol])
@@ -417,7 +419,7 @@ const IntentView: React.FC<{
               <FeeRow>
                 <HeaderLeft>
                   <Label>CA Gas Fees: </Label>
-                  <AppTooltip message="Gas Fees">
+                  <AppTooltip message="Gas Fees (Collection + Fulfilment)">
                     <InfoImg
                       src={IMAGE_LINKS["info"]}
                       alt="Info"
@@ -516,7 +518,6 @@ const IntentView: React.FC<{
 
           {rates?.[intent?.token?.symbol] && (
             <TotalAtDestinationValue>
-              ~
               {(
                 Number(intent?.sourcesTotal) /
                 Number(rates[intent?.token?.symbol])

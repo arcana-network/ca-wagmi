@@ -15,20 +15,18 @@ export const useCAFn = () => {
     to: `0x${string}`;
     amount: string;
     token: ALLOWED_TOKENS;
-    chain?: number;
+    chain: number;
   }) => {
     if (!ready || !ca) {
       throw new Error("ca not ready");
     }
     try {
-      let fn = ca
-        .transfer()
-        .to(params.to)
-        .amount(params.amount)
-        .token(params.token);
-      if (params.chain) {
-        fn = fn.chain(params.chain);
-      }
+      let fn = await ca.transfer({
+        to: params.to,
+        amount: params.amount,
+        chainID: params.chain,
+        token: params.token,
+      });
       return await fn.exec();
     } catch (e) {
       if (e instanceof Error && "message" in e) {
@@ -41,7 +39,7 @@ export const useCAFn = () => {
   const bridge = async (params: {
     amount: string;
     token: ALLOWED_TOKENS;
-    chain?: number;
+    chain: number;
     gas?: bigint;
   }) => {
     if (!ready || !ca) {
@@ -49,14 +47,13 @@ export const useCAFn = () => {
     }
 
     try {
-      let fn = ca.bridge().amount(params.amount).token(params.token);
-      if (params.chain) {
-        fn = fn.chain(params.chain);
-      }
-      if (params.gas !== undefined) {
-        fn = fn.gas(params.gas);
-      }
-      return await fn.exec();
+      let fn = await ca.bridge({
+        token: params.token,
+        amount: params.amount,
+        chainID: params.chain,
+        gas: params.gas,
+      });
+      return fn.exec();
     } catch (e) {
       if (e instanceof Error && "message" in e) {
         setError(e.message);

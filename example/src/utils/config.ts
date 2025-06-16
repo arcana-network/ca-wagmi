@@ -1,10 +1,11 @@
-import { Network } from "@arcana/ca-sdk";
+import { CA, Network } from "@arcana/ca-sdk";
 import { http, createConfig } from "wagmi";
 import {
   mainnet,
   optimism,
   base,
   arbitrum,
+  avalanche,
   scroll,
   linea,
   polygon,
@@ -20,6 +21,7 @@ export const config = createConfig({
     mainnet,
     optimism,
     arbitrum,
+    avalanche,
     base,
     scroll,
     linea,
@@ -36,6 +38,7 @@ export const config = createConfig({
     [optimism.id]: http(),
     [arbitrum.id]: http(),
     [base.id]: http(),
+    [avalanche.id]: http(),
     [scroll.id]: http(),
     [linea.id]: http(),
     [polygon.id]: http(),
@@ -48,3 +51,12 @@ export const config = createConfig({
 });
 
 export const network = Network.CORAL;
+
+const ca = new CA({
+  network,
+  debug: true,
+});
+
+export const getCA = () => {
+  return ca;
+};
