@@ -13,6 +13,16 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "wagmi",
+    "web3",
+    "chain",
+    "abstraction",
+    "intent",
+    "unified",
+    "balance",
+    "sdk"
+  ],
   "scripts": {
     "build": "rimraf dist && tsc",
     "test": "echo \"Error: no test specified\" && exit 1",

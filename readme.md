@@ -1,10 +1,16 @@
-# Chain Abstraction (Wagmi PnP)
+# Chain Abstraction SDK
 
-The Arcana `ca-wagmi` SDK simplifies Web3 apps built with the Wagmi library by providing a unified balance across blockchains through easy-to-use `useBalance` and `useBalanceModal` hooks. It also replaces the Wagmi hooks `useSendTransaction` and `useWriteContract` to support chain-abstracted transactions.
+Enable unified balance in Web3 apps using Wagmi.
+Perform chain-abstracted blockchain transactions.
+
+Wagmi hooks (`useSendTransaction` and `useWriteContract`) get instant chain abstraction.
+Add `useBalance` and `useBalanceModal` hooks to access unified balance in the user's EOA.
 
 ## Quick start
 
-```ts
+```ts 
+/* File: main.tsx */
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { config } from "./config";
@@ -26,10 +32,11 @@ function App() {
     </WagmiProvider>
   );
 }
+
 ```
 
 ```ts
-App.jsx;
+/* File: App.tsx */
 
 // import { useSendTransaction } from 'wagmi'
 import { useSendTransaction } from "@arcana/ca-wagmi";
@@ -53,16 +60,29 @@ function App() {
 }
 ```
 
+## Install
+
+```sh
+npm install @arcana/ca-sdk @arcana/ca-wagmi
+```
+
+## Integrate
+
+Create a `CA` object. Import `CAProvider` component and specify the `CA` object as the client. 
+Replace import of the Wagmi hooks `useSendTransaction` and `useWriteContract` from the `ca-wagmi` instead of the standard `wagmi` library. 
+
+Access unified balance through the following hooks. Enable chain abstracted `bridge` and `transfer` functions.
+
 ## Hooks
 
-There are two kinds of hooks implemented by the `ca-wagmi` SDK.
+There are two kinds of hooks provided by the `ca-wagmi` SDK.
 
-- Wagmi hooks (Re-implemented / Replaced)
-- Arcana `ca-wagmi` hooks to enable unified balance and chain abstracted transactions
+- Wagmi hooks (Re-implemented / Replaced with chain abstraction capability)
+- Arcana `ca-wagmi` hooks (for unified balance and chain abstracted transactions)
 
 ### Wagmi Hooks
 
-Following Wagmi hooks have been replaced by the Arcana `ca-wagmi` SDK to ensure chain abstraction is enabled automatically in the transaction flow with no changes to the app code.
+Replace import of these Wagmi hooks from the `ca-wagmi` SDK. This ensures chain abstracted transactions with no other changes to the app code.
 
 ```ts
 import { useSendTransaction, useWriteContract } from "@arcana/ca-wagmi";
@@ -76,7 +96,7 @@ const { writeContract, writeContractAsync } = useWriteContract();
 
 ### Arcana `ca-wagmi` Hooks
 
-The following hooks allow developers to access unified balance and enable chain abstracted bridge and transfer operations in a Wagmi app.
+Access unified balance through the following hooks. Enable chain abstracted `bridge` and `transfer` functions.
 
 - [useBalance](#usebalance)
 - [useBalances](#usebalances)

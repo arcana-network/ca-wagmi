@@ -1,10 +1,10 @@
 {
   "sidebarLinks": {
-        "Docs": "https://docs.arcana.network",
+    "SDK Docs": "https://docs.arcana.network/ca-index/",
   },
   "entryPoints": ["src/index.ts"],
   "entryPointStrategy": "expand",
-  "name": "CA Wagmi SDK Reference",
+  "name": "ca-wagmi",
   "out": "htmldocs",
   "excludePrivate": true,
   "excludeProtected": true,
@@ -20,6 +20,6 @@
     "typedoc-plugin-ga"
   ],
   "themeColor": "#ff4e9f",
-  "customFooterHtml": "<p> Copyright © <strong>Arcana Technologies Ltd. </strong>All rights reserved</p>",
+  "customFooterHtml": "<p> Copyright © <2025 strong>Arcanaa Network. </strong>All rights reserved</p>",
   "customCss": "./typedoc-theme/an_style.css"
 }
