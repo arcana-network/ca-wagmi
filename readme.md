@@ -312,3 +312,5 @@ const getMyIntentsResponse = useGetMyIntents(1);
   error: null
 }
 ```
+
+See [CA Wagmi SDK Reference](https://ca-wagmi-sdk-ref-guide.netlify.app/modules) for details.
