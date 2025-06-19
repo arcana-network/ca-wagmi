@@ -49,7 +49,9 @@ export const CAProvider = ({
             >
               <>
                 <Modal
-                  alwaysOnTop={view !== VIEW.PROGRESSION}
+                  alwaysOnTop={
+                    view !== VIEW.PROGRESSION && view !== VIEW.ALLOWANCE
+                  }
                   isopen={view !== VIEW.NONE}
                 >
                   <AllowanceSetup
