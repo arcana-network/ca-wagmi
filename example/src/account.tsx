@@ -379,6 +379,15 @@ const chainToCurrency: {
     "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e",
     "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7",
   ],
+  56: [
+    "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
+    "0x55d398326f99059fF775485246999027B3197955",
+  ],
+  8217: [null, "0xd077a400968890eacc75cdc901f0356c943e4fdb"],
+  50104: [
+    "0x9aa0f72392b5784ad86c6f3e899bcc053d00db4f",
+    "0x6386da73545ae4e2b2e0393688fa8b65bb9a7169",
+  ],
   // Testnet chains (supported in folly)
   421614: [
     "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
