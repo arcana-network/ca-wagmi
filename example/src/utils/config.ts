@@ -48,6 +48,9 @@ export const config = createConfig({
     [scroll.id]: http(),
     [linea.id]: http(),
     [polygon.id]: http(),
+    [sophon.id]: http(),
+    [kaia.id]: http(),
+    [bsc.id]: http(),
     // Testnet chains (supported in folly)
     [arbitrumSepolia.id]: http(),
     [optimismSepolia.id]: http(),
