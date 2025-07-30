@@ -282,7 +282,7 @@ export function Account() {
                 </option>
                 <option value="usdt">USDT</option>
                 <option value="usdc">USDC</option>
-                <option value="eth">ETH</option>
+                <option value="eth">Native</option>
               </select>
             </div>
             <div className="mb-5">
@@ -410,6 +410,9 @@ const idToExplorer: { [k: number]: string } = {
   534352: "https://scrollscan.com/",
   59144: "https://lineascan.build/",
   43114: "https://snowscan.xyz",
+  56: "https://bscscan.com",
+  8217: "https://kaiascan.io",
+  50104: "https://sophscan.xyz",
 
   // Testnet chains (supported in folly)
   421614: "https://sepolia.arbiscan.io/",
