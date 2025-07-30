@@ -13,6 +13,9 @@ import {
   optimismSepolia,
   polygonAmoy,
   baseSepolia,
+  sophon,
+  kaia,
+  bsc,
 } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
@@ -26,6 +29,9 @@ export const config = createConfig({
     scroll,
     linea,
     polygon,
+    sophon,
+    kaia,
+    bsc,
     // Testnet chains (supported in folly)
     arbitrumSepolia,
     optimismSepolia,
