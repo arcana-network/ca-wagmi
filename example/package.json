@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arcana/ca-sdk": "^1.0.0",
+    "@arcana/ca-sdk": "^1.1.1",
     "@arcana/ca-wagmi": "^1.0.0",
     "@ark-ui/react": "^5.0.0",
     "@tailwindcss/vite": "^4.0.3",
